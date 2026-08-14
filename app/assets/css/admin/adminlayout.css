@@ -1,0 +1,229 @@
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f5f7fa;
+    color: #333;
+    font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  }
+  
+  .admin-sidebar {
+    width: 260px;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    top: 0;
+    bottom: 0;  /* 從頂部到底部 */
+    left: 0;
+    overflow-y: auto;
+    z-index: 10;
+  }
+
+  
+  
+  .sidebar-header {
+    padding: 24px 20px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .system-title {
+    font-size: 20px;
+    color: #2c5282;
+    margin: 0;
+    font-weight: 600;
+  }
+  
+  .user-profile {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    background: #2c5282;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-right: 12px;
+  }
+  
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-name {
+    font-weight: 600;
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .user-role {
+    color: #718096;
+    margin: 0;
+    font-size: 12px;
+  }
+  
+  .sidebar-nav {
+    flex: 1;
+    padding: 16px 0;
+  }
+  
+  .sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #4a5568;
+    text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 500;
+  }
+  
+  .nav-link:hover, .router-link-active {
+    background-color: #ebf4ff;
+    color: #2c5282;
+    border-left: 3px solid #2c5282;
+  }
+  
+  .icon {
+    margin-right: 12px;
+    width: 24px;
+    text-align: center;
+  }
+  
+  .sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid #f0f0f0;
+  }
+  
+  .logout-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .logout-btn:hover {
+    background-color: #fed7d7;
+    color: #c53030;
+  }
+  
+  .logout-btn i {
+    margin-right: 8px;
+  }
+
+  .back-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-bottom: 5px;
+  }
+  
+  .back-btn:hover {
+    background-color: #c8d3e6;
+    color: #000000;
+  }
+  
+  .back-btn i {
+    margin-right: 8px;
+  }
+  
+  .admin-content {
+    flex: 1;
+  }
+  
+  .content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+  
+  .page-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 0;
+  }
+  
+  .header-actions {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .notifications-btn, .settings-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid #e2e8f0;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .notifications-btn:hover, .settings-btn:hover {
+    background: #ebf4ff;
+    color: #2c5282;
+  }
+  
+  .content-wrapper {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    padding: 24px;
+    min-height: 100vh;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .admin-sidebar {
+      width: 80px;
+      overflow-x: hidden;
+    }
+    
+    .admin-sidebar:hover {
+      width: 260px;
+    }
+    
+    .system-title, .user-info, .nav-link span, .logout-btn span {
+      transition: opacity 0.3s;
+      opacity: 0;
+    }
+    
+    .admin-sidebar:hover .system-title,
+    .admin-sidebar:hover .user-info,
+    .admin-sidebar:hover .nav-link span,
+    .admin-sidebar:hover .logout-btn span {
+      opacity: 1;
+    }
+  }

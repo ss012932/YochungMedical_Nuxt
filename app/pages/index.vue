@@ -3882,7 +3882,7 @@ onBeforeUnmount(() => {
       clamp(64px, 5.8vw, 86px)
       clamp(24px, 2.5vw, 36px)
       clamp(52px, 4.4vw, 64px)
-      clamp(58px, 6.2vw, 104px);
+      clamp(82px, 7.5vw, 138px);
   }
 
   .hero-copy-content {
@@ -3958,6 +3958,23 @@ onBeforeUnmount(() => {
    小筆電 / 橫向平板：861 ~ 1100px。
    服務卡改成 2 欄並回到正常文件流，避免四卡過度擁擠。
 ============================================================ */
+/* ============================================================
+   Desktop Hero 文字位置
+   功能：1180px 以上桌機版將整組 Hero 文字往右移，
+   讓文字落在左半畫面的視覺中央；平板與手機不受影響。
+============================================================ */
+@media (min-width: 1180px) {
+  .hero-copy {
+    /*
+      功能：Hero 文字左緣對齊第一張服務卡「高品質保證」的文字左緣。
+      服務列最大寬度為 1280px；+94px 為卡片內距 + 圖示寬度 + 圖文間距。
+    */
+    padding-left: calc(
+      max(var(--fluid-gutter), (100vw - 1280px) / 2) + 10px
+    ) !important;
+  }
+}
+
 @media (min-width: 861px) and (max-width: 1100px) {
   .hero-section {
     min-height: auto;

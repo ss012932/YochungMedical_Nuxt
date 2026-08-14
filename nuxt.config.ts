@@ -3,6 +3,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  // 功能：全站載入 Font Awesome Free，供既有 fas/fa-* 圖示使用。
+  css: ['@fortawesome/fontawesome-free/css/all.min.css'],
+
   // SEO 正式網址：部署時請設定 NUXT_PUBLIC_SITE_URL，例如 https://www.example.com
   // 本機未設定時使用 localhost，方便驗證 sitemap / robots / canonical。
   site: {

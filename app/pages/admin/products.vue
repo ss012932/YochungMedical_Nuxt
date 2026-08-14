@@ -87,10 +87,10 @@
     </div>
 
     <div class="products-content">
-      <div class="products-grid" v-if="filteredProducts.length > 0">
+      <div class="products-grid" v-if="paginatedProducts.length > 0">
         <div
           class="product-card"
-          v-for="product in filteredProducts"
+          v-for="product in paginatedProducts"
           :key="product.id"
         >
           <div class="product-status" :class="getStatusClass(product)">
@@ -649,6 +649,9 @@ export default {
     searchQuery() {
       this.currentPage = 1; // 搜尋時重置到第一頁
     },
+    sortOption() {
+      this.currentPage = 1; // 排序改變時也回到第一頁，避免停在不存在的頁碼。
+    },
   },
   mounted() {
     this.initData(); // 改為統一的初始方法
@@ -696,49 +699,17 @@ export default {
         (p) => p.isActive && p.stock <= p.lowStockThreshold && p.stock > 0
       ).length;
     },
+    // 功能：總筆數直接沿用已完成搜尋、分類、狀態與排序的 filteredProducts，
+    // 避免分頁計算和畫面實際資料使用兩套條件。
     totalFilteredProducts() {
-      let result = [...this.products];
+      return this.filteredProducts.length;
+    },
 
-      if (this.searchQuery) {
-        const query = this.searchQuery.toLowerCase();
-        result = result.filter((product) => {
-          const id = product.id ? product.id.toString().toLowerCase() : "";
-          const name = product.name ? product.name.toLowerCase() : "";
-          const category = product.category
-            ? product.category.toLowerCase()
-            : "";
-
-          return (
-            id.includes(query) ||
-            name.includes(query) ||
-            category.includes(query)
-          );
-        });
-      }
-
-      if (this.categoryFilter) {
-        result = result.filter(
-          (product) => product.categoryId == this.categoryFilter
-        );
-      }
-
-      if (this.statusFilter) {
-        switch (this.statusFilter) {
-          case "active":
-            result = result.filter((product) => product.isActive);
-            break;
-          case "inactive":
-            result = result.filter((product) => !product.isActive);
-            break;
-          case "lowStock":
-            result = result.filter(
-              (product) => product.stock <= product.lowStockThreshold
-            );
-            break;
-        }
-      }
-
-      return result.length;
+    // 功能：只取目前頁面的商品，商品管理不再把全部資料塞進內層捲動區。
+    paginatedProducts() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.filteredProducts.slice(start, end);
     },
     totalPages() {
       return Math.ceil(this.totalFilteredProducts / this.itemsPerPage);
@@ -891,7 +862,21 @@ export default {
       this.currentPage = 1;
     },
     goToPage(page) {
+      if (page < 1 || page > this.totalPages || page === this.currentPage) return;
+
       this.currentPage = page;
+
+      // 功能：商品管理右側本身是獨立捲動區，切換分頁後直接回到右側內容最上方。
+      this.$nextTick(() => {
+        const adminContent = document.querySelector('.products-admin-layout .admin-content');
+
+        if (adminContent) {
+          adminContent.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+        }
+      });
     },
     // 新增的方法
     openProductModal(product = null) {
@@ -1616,21 +1601,20 @@ definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
 
 <style scoped>
 .products-page {
-    width: 100%;
-   height: calc(100vh - 60px); /* 減去header高度 */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden; /* 禁止整頁滾動 */
-  padding: 20px; /* 如果需要整體間距 */
+  width: 100%;
+  min-height: 0;
+  height: auto;
+  display: block;
+  overflow: visible;
+  padding: 0;
   box-sizing: border-box;
-  }
+}
   
   .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
-     flex-shrink: 0; /* 防止縮小 */
   }
   
   .header-left {
@@ -1803,20 +1787,47 @@ definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
     background-color: #f7fafc;
   }
 
-  /* 產品內容區域 - 新增滾動容器 */
+/* ============================================================
+   商品內容區域
+   功能：使用一般頁面流 + 頁碼分頁，不建立第二個垂直捲軸。
+============================================================ */
 .products-content {
-  flex: 1; /* 佔用剩餘空間 */
-  overflow-y: auto; /* 垂直滾動 */
-  overflow-x: hidden; /* 禁止水平滾動 */
-  padding-right: 8px; /* 為滾動條留空間 */
-  min-height: 0; /* 重要：允許flex子項目縮小 */
+  width: 100%;
+  overflow: visible;
+  padding: 0;
+  min-height: 0;
 }
   
   .products-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
     margin-bottom: 32px;
+  }
+
+  /* 功能：不同螢幕寬度自動調整商品卡欄數，桌機寬畫面維持 5 張一排。 */
+  @media (max-width: 1500px) {
+    .products-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 1200px) {
+    .products-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 900px) {
+    .products-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 600px) {
+    .products-grid {
+      grid-template-columns: 1fr;
+    }
   }
   
   .product-card {
@@ -1833,35 +1844,41 @@ definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
   }
   
+  /* 商品卡片右上角狀態標籤：提高圖片上的辨識度 */
   .product-status {
     position: absolute;
     top: 12px;
     right: 12px;
-    padding: 4px 10px;
-    border-radius: 12px;
+    padding: 6px 12px;
+    border-radius: 999px;
     font-size: 12px;
-    font-weight: 500;
-    z-index: 1;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.22);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    z-index: 2;
   }
   
+  /* 上架中：綠色 */
   .product-status.active {
-    background: rgba(72, 187, 120, 0.1);
-    color: #38a169;
+    background: #2f855a;
   }
   
+  /* 庫存低：橘色 */
   .product-status.low-stock {
-    background: rgba(246, 173, 85, 0.1);
-    color: #dd6b20;
+    background: #dd6b20;
   }
   
+  /* 無庫存：紅色 */
   .product-status.out-of-stock {
-    background: rgba(245, 101, 101, 0.1);
-    color: #e53e3e;
+    background: #c53030;
   }
   
+  /* 已下架：深灰色 */
   .product-status.inactive {
-    background: rgba(160, 174, 192, 0.1);
-    color: #718096;
+    background: #4a5568;
   }
   
   .product-image {
@@ -2037,8 +2054,9 @@ definePageMeta({ layout: 'admin', middleware: 'admin-auth' })
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 32px;
+    margin: 32px 0 8px;
     gap: 8px;
+    flex-wrap: wrap;
   }
   
   .page-btn {

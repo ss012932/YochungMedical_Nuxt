@@ -100,8 +100,6 @@
         <span>© {{ currentYear }} {{ $ui('祐強醫療儀器有限公司 版權所有') }}</span>
         <span class="footer-divider" aria-hidden="true">|</span>
         <span>{{ $ui('Design by 彩虹小馬工作室') }}</span>
-        <span class="footer-divider" aria-hidden="true">|</span>
-        <a class="rates-credit" href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">Rates by ExchangeRate-API</a>
       </div>
     </div>
   </footer>

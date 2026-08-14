@@ -5,7 +5,6 @@
     <section class="orders-manager-card">
       <div class="orders-manager-head">
         <div>
-          <span class="manager-eyebrow">ORDER LIST</span>
           <h3>{{ $ui('訂單記錄') }}</h3>
           <p>{{ $ui('快速搜尋、篩選並查看您的歷史訂單') }}</p>
         </div>
@@ -60,7 +59,6 @@
           <div class="compact-order-main">
             <div class="order-primary-info">
               <div class="order-id-line">
-                <span class="order-id-label">{{ $ui('訂單編號') }}</span>
                 <strong>{{ order.merchantTradeNo }}</strong>
               </div>
               <div class="order-secondary-line">

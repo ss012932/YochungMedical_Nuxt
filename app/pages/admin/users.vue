@@ -746,7 +746,7 @@ export default {
       statusFilter: "",
       sortOption: "nameAsc",
       currentPage: 1,
-      itemsPerPage: 7,
+      itemsPerPage: 8,
       showCreateModal: false,
       showPasswordModal: false,
       isEditing: false,

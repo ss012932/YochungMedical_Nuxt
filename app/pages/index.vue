@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="home-page"
-    :class="{ 'home-content-ready': isHomeContentVisible }"
-  >
+  <div class="home-page">
     <!-- ========================================================
       Hero 區塊
       說明：視覺改為新版設計稿的左右分欄，但保留舊首頁三組輪播內容與 5 秒切換邏輯。
@@ -10,7 +7,7 @@
     <section class="hero-section">
       <div class="hero-shell">
         <div class="hero-copy">
-          <span class="hero-eyebrow">{{ $ui('祐強醫療儀器有限公司') }}</span>
+          <span class="hero-eyebrow">{{ $ui("祐強醫療儀器有限公司") }}</span>
 
           <Transition name="hero-copy" mode="out-in">
             <div :key="currentSlide" class="hero-copy-content">
@@ -21,7 +18,13 @@
             </div>
           </Transition>
 
-          <p class="hero-intro">{{ $ui('祐強醫療儀器有限公司擁有超過 20 年的專業經驗，我們致力於提供醫療機構優質的設備與服務。') }}</p>
+          <p class="hero-intro">
+            {{
+              $ui(
+                "祐強醫療儀器有限公司擁有超過 20 年的專業經驗，我們致力於提供\n醫療機構優質的設備與服務。",
+              )
+            }}
+          </p>
 
           <div class="hero-actions">
             <NuxtLink
@@ -29,10 +32,10 @@
               class="button button-primary"
             >
               {{ $ui(carouselSlides[currentSlide]?.buttonText || "了解更多") }}
-              <span aria-hidden="true">→</span>
             </NuxtLink>
 
-            <NuxtLink to="/contact" class="button button-outline">{{ $ui('聯絡專員') }}<span aria-hidden="true">→</span>
+            <NuxtLink to="/contact" class="button button-outline"
+              >{{ $ui("聯絡專員") }}
             </NuxtLink>
           </div>
 
@@ -43,7 +46,9 @@
               :key="`hero-dot-${index}`"
               type="button"
               :class="{ active: currentSlide === index }"
-              :aria-label="$ui('顯示第 {index} 張').replace('{index}', String(index + 1))"
+              :aria-label="
+                $ui('顯示第 {index} 張').replace('{index}', String(index + 1))
+              "
               @click="setSlide(index)"
             ></button>
           </div>
@@ -112,11 +117,15 @@
     <section class="home-section category-section">
       <div class="category-layout">
         <div class="category-content">
-          <div v-if="loadingCategories" class="section-state">{{ $ui('正在載入產品分類...') }}</div>
+          <div v-if="loadingCategories" class="section-state">
+            {{ $ui("正在載入產品分類...") }}
+          </div>
           <div
             v-else-if="errorLoadingCategories"
             class="section-state error-state"
-          >{{ $ui('目前無法載入產品分類，請稍後再試。') }}</div>
+          >
+            {{ $ui("目前無法載入產品分類，請稍後再試。") }}
+          </div>
           <div v-else class="category-slider">
             <button
               v-if="hasCategoryOverflow"
@@ -215,14 +224,18 @@
     ========================================================= -->
     <section class="home-section products-section">
       <div class="products-heading">
-        <h2>{{ $ui('熱門產品') }}</h2>
+        <h2>{{ $ui("熱門產品") }}</h2>
         <NuxtLink to="/products" class="section-link"
-          >{{ $ui('查看全部商品') }}<span>→</span></NuxtLink
+          >{{ $ui("查看全部商品") }}<span>→</span></NuxtLink
         >
       </div>
 
-      <div v-if="loadingProducts" class="section-state">{{ $ui('正在加載熱門產品...') }}</div>
-      <div v-else-if="errorLoadingProducts" class="section-state error-state">{{ $ui('無法加載熱門產品數據，請稍後再試。') }}</div>
+      <div v-if="loadingProducts" class="section-state">
+        {{ $ui("正在加載熱門產品...") }}
+      </div>
+      <div v-else-if="errorLoadingProducts" class="section-state error-state">
+        {{ $ui("無法加載熱門產品數據，請稍後再試。") }}
+      </div>
       <div v-else-if="visibleFeaturedProducts.length" class="product-grid">
         <article
           v-for="product in visibleFeaturedProducts"
@@ -243,15 +256,20 @@
           </NuxtLink>
 
           <div class="product-card-body">
-            <span v-if="product.category" class="product-category">{{ $ui(product.category) }}</span>
+            <span v-if="product.category" class="product-category">{{
+              $ui(product.category)
+            }}</span>
             <h3>{{ $ui(product.name) }}</h3>
             <p>{{ $ui(product.shortDescription) }}</p>
-            <NuxtLink :to="{ path: '/products', query: { id: product.id } }">{{ $ui('查看詳情') }}<span aria-hidden="true">→</span>
+            <NuxtLink :to="{ path: '/products', query: { id: product.id } }"
+              >{{ $ui("查看詳情") }}<span aria-hidden="true">→</span>
             </NuxtLink>
           </div>
         </article>
       </div>
-      <div v-else class="section-state">{{ $ui('目前沒有熱門產品資料。') }}</div>
+      <div v-else class="section-state">
+        {{ $ui("目前沒有熱門產品資料。") }}
+      </div>
     </section>
 
     <!-- ========================================================
@@ -262,9 +280,15 @@
       <div class="reasons-soft-heading">
         <div>
           <span class="reasons-soft-label">WHY YOCHUNG</span>
-          <h2>{{ $ui('為什麼選擇祐強？') }}</h2>
+          <h2>{{ $ui("為什麼選擇祐強？") }}</h2>
         </div>
-        <p>{{ $ui('祐強醫療儀器有限公司擁有超過 20 年的專業經驗，從產品品質、技術支援到配送安裝，持續提供穩定、可靠且貼近需求的服務。') }}</p>
+        <p>
+          {{
+            $ui(
+              "祐強醫療儀器有限公司擁有超過 20 年的專業經驗，從產品品質、技術支援到配送安裝，持續提供穩定、可靠且貼近需求的服務。",
+            )
+          }}
+        </p>
       </div>
 
       <div class="reasons-soft-panel">
@@ -286,12 +310,16 @@
               <span class="reason-soft-index">0{{ index + 2 }}</span>
               <span class="reason-soft-icon" aria-hidden="true">
                 <svg v-if="index === 0" viewBox="0 0 24 24">
-                  <path d="M12 3 19 6v5c0 4.6-2.8 8-7 10-4.2-2-7-5.4-7-10V6l7-3Z" />
+                  <path
+                    d="M12 3 19 6v5c0 4.6-2.8 8-7 10-4.2-2-7-5.4-7-10V6l7-3Z"
+                  />
                   <path d="m9 12 2 2 4-5" />
                 </svg>
                 <svg v-else-if="index === 1" viewBox="0 0 24 24">
                   <path d="M4 15a8 8 0 0 1 16 0" />
-                  <path d="M4 15v3a2 2 0 0 0 2 2h2v-6H4ZM20 15v3a2 2 0 0 1-2 2h-2v-6h4Z" />
+                  <path
+                    d="M4 15v3a2 2 0 0 0 2 2h2v-6H4ZM20 15v3a2 2 0 0 1-2 2h-2v-6h4Z"
+                  />
                   <path d="M16 20c0 1-1 2-2 2h-2" />
                 </svg>
                 <svg v-else-if="index === 2" viewBox="0 0 24 24">
@@ -319,8 +347,10 @@
     ========================================================= -->
     <section class="home-section videos-section">
       <div class="videos-heading">
-        <h2>{{ $ui('產品影片') }}</h2>
-        <NuxtLink to="/video" class="section-link">{{ $ui('查看全部影片') }}<span>→</span></NuxtLink>
+        <h2>{{ $ui("產品影片") }}</h2>
+        <NuxtLink to="/video" class="section-link"
+          >{{ $ui("查看全部影片") }}<span>→</span></NuxtLink
+        >
       </div>
 
       <div class="video-grid">
@@ -345,11 +375,10 @@
       </div>
     </section>
 
-    <!-- 舊首頁原有推薦商品 Modal：保留顯示與 close/contact 事件邏輯。 -->
+    <!-- 首頁推薦商品 Modal：客服洽詢改由 NewsView 內部的共用客服框處理。 -->
     <NewsView
       :is-visible="showNewsViewModal"
       @close="closeNewsViewModal"
-      @contact="goToContact"
     />
   </div>
 </template>
@@ -362,7 +391,6 @@ import banner1 from "@/assets/image/banner1.webp";
 import banner2 from "@/assets/image/banner2.webp";
 
 import banner3 from "@/assets/image/banner3.webp";
-
 
 // ============================================================
 // SEO
@@ -391,7 +419,6 @@ useHead({
   ],
 });
 
-const router = useRouter();
 const api = useApi();
 
 interface CarouselSlide {
@@ -532,8 +559,6 @@ const homeVideos = videos.slice(0, 3);
 // 舊首頁狀態
 // ============================================================
 const showNewsViewModal = ref(true);
-// 功能：首頁先讓推薦商品懸浮框完成顯示，再讓背景內容慢慢淡入，避免先看到尚未載入完成的畫面。
-const isHomeContentVisible = ref(false);
 // 功能：記住首頁推薦商品 Modal 開啟前的捲動位置，關閉後回到原位置。
 const newsModalScrollY = ref(0);
 const currentSlide = ref(0);
@@ -557,7 +582,6 @@ const categoryScroller = ref<HTMLElement | null>(null);
 const canScrollCategoryLeft = ref(false);
 const canScrollCategoryRight = ref(false);
 
-let homeContentRevealTimer: ReturnType<typeof setTimeout> | undefined;
 let carouselInterval: ReturnType<typeof setInterval> | undefined;
 let productCarouselInterval: ReturnType<typeof setInterval> | undefined;
 let testimonialInterval: ReturnType<typeof setInterval> | undefined;
@@ -573,11 +597,7 @@ const sortedCategories = computed(() => {
 });
 
 // 首頁不顯示臨時用途分類；正式分類仍由 API 動態載入。
-const hiddenHomeCategoryNames = new Set([
-  '洽詢客服',
-  '祐強醫療',
-  '運費',
-]);
+const hiddenHomeCategoryNames = new Set(["洽詢客服", "祐強醫療", "運費"]);
 
 const visibleCategories = computed(() => {
   return sortedCategories.value.filter(
@@ -598,8 +618,7 @@ const visibleFeaturedProducts = computed<FeaturedProduct[]>(() => {
   const visibleCount = Math.min(products.length, 4);
 
   return Array.from({ length: visibleCount }, (_, index) => {
-    const productIndex =
-      (productCurrentSlide.value + index) % products.length;
+    const productIndex = (productCurrentSlide.value + index) % products.length;
 
     return products[productIndex];
   }).filter((product): product is FeaturedProduct => product !== undefined);
@@ -663,9 +682,6 @@ function closeNewsViewModal() {
   unlockNewsModalPageScroll();
 }
 
-function goToContact() {
-  router.push("/contact");
-}
 
 async function fetchTopProducts() {
   try {
@@ -797,12 +813,6 @@ onMounted(() => {
   // 功能：首頁載入即顯示推薦商品，因此同步鎖住背景捲動並消除右側 scrollbar 空白。
   lockNewsModalPageScroll();
 
-  // 功能：NewsView 的 appear 淡入為 0.3 秒；稍後才顯示首頁背景，確保懸浮框永遠先出現。
-  isHomeContentVisible.value = false;
-  homeContentRevealTimer = setTimeout(() => {
-    isHomeContentVisible.value = true;
-  }, 360);
-
   productCurrentSlide.value = 0;
 
   startCarousel();
@@ -818,7 +828,6 @@ onBeforeUnmount(() => {
     unlockNewsModalPageScroll();
   }
 
-  if (homeContentRevealTimer) clearTimeout(homeContentRevealTimer);
   if (carouselInterval) clearInterval(carouselInterval);
   if (testimonialInterval) clearInterval(testimonialInterval);
   if (productCarouselInterval) clearInterval(productCarouselInterval);
@@ -947,6 +956,7 @@ onBeforeUnmount(() => {
   color: #536673;
   font-size: 14px;
   line-height: 1.85;
+  white-space: pre-line;
 }
 
 .hero-actions {
@@ -1736,7 +1746,6 @@ onBeforeUnmount(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   .hero-copy-enter-active,
   .hero-copy-leave-active,
   .hero-image-enter-active,
@@ -1990,8 +1999,6 @@ onBeforeUnmount(() => {
     font-size: 12px;
     line-height: 1.65;
   }
-
-
 
   .category-section {
     padding-top: 52px;
@@ -2673,7 +2680,6 @@ onBeforeUnmount(() => {
   object-position: center;
 }
 
-
 /* ============================================================
    為什麼選擇我們 + 產品影片 — 質感版型
    說明：使用編輯式留白、不對稱結構與細節層次，降低制式卡片感。
@@ -2706,7 +2712,7 @@ onBeforeUnmount(() => {
   bottom: -125px;
   width: 310px;
   height: 310px;
-  content: '';
+  content: "";
   pointer-events: none;
   background: rgba(143, 47, 126, 0.035);
   border-radius: 50%;
@@ -2874,7 +2880,7 @@ onBeforeUnmount(() => {
   bottom: 0;
   left: 0;
   height: 1px;
-  content: '';
+  content: "";
   background: rgba(60, 143, 145, 0.34);
 }
 
@@ -2902,8 +2908,12 @@ onBeforeUnmount(() => {
 .video-featured-media::after {
   position: absolute;
   inset: 40% 0 0;
-  content: '';
-  background: linear-gradient(180deg, transparent 0%, rgba(8, 22, 31, 0.78) 100%);
+  content: "";
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(8, 22, 31, 0.78) 100%
+  );
 }
 
 .video-featured-media img {
@@ -2986,7 +2996,9 @@ onBeforeUnmount(() => {
   overflow: hidden;
   background: #f6f8f7;
   border-radius: 20px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .video-secondary:hover {
@@ -3142,7 +3154,6 @@ onBeforeUnmount(() => {
   }
 }
 
-
 /* ============================================================
    產品影片 — 復原為上一版三欄排版
 ============================================================ */
@@ -3283,8 +3294,6 @@ onBeforeUnmount(() => {
   }
 }
 
-
-
 /* ============================================================
    為什麼選擇祐強 — Premium Editorial Layout
 ============================================================ */
@@ -3357,7 +3366,7 @@ onBeforeUnmount(() => {
   right: -82px;
   width: 250px;
   height: 250px;
-  content: '';
+  content: "";
   background: rgba(83, 166, 168, 0.11);
   border-radius: 50%;
 }
@@ -3368,7 +3377,7 @@ onBeforeUnmount(() => {
   bottom: 28px;
   width: 72px;
   height: 4px;
-  content: '';
+  content: "";
   background: #973887;
   border-radius: 999px;
 }
@@ -3475,7 +3484,10 @@ onBeforeUnmount(() => {
   background: #fff;
   border: 1px solid #e1e8e7;
   border-radius: 22px;
-  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+  transition:
+    transform 0.22s ease,
+    border-color 0.22s ease,
+    box-shadow 0.22s ease;
 }
 
 .reason-secondary-card:hover {
@@ -3580,8 +3592,6 @@ onBeforeUnmount(() => {
   }
 }
 
-
-
 /* ============================================================
    為什麼選擇祐強 — Soft Premium Layout
    說明：統一淺色視覺語言，避免深色主卡與白卡產生突兀切割。
@@ -3634,8 +3644,16 @@ onBeforeUnmount(() => {
   grid-template-columns: minmax(300px, 0.82fr) minmax(0, 1.68fr);
   overflow: hidden;
   background:
-    radial-gradient(circle at 0% 100%, rgba(143, 47, 126, 0.045) 0 110px, transparent 112px),
-    radial-gradient(circle at 100% 0%, rgba(70, 157, 159, 0.055) 0 150px, transparent 152px),
+    radial-gradient(
+      circle at 0% 100%,
+      rgba(143, 47, 126, 0.045) 0 110px,
+      transparent 112px
+    ),
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(70, 157, 159, 0.055) 0 150px,
+      transparent 152px
+    ),
     #f7f9f8;
   border: 1px solid #e5ebea;
   border-radius: 26px;
@@ -3836,8 +3854,6 @@ onBeforeUnmount(() => {
   }
 }
 
-
-
 /* ============================================================
    Fluid RWD Override
    說明：集中管理首頁的流動式響應版型，避免前方多組斷點互相覆蓋。
@@ -3878,11 +3894,8 @@ onBeforeUnmount(() => {
     width: 50%;
     height: clamp(500px, 36.8vw, 560px);
     min-height: clamp(500px, 36.8vw, 560px);
-    padding:
-      clamp(64px, 5.8vw, 86px)
-      clamp(24px, 2.5vw, 36px)
-      clamp(52px, 4.4vw, 64px)
-      clamp(82px, 7.5vw, 138px);
+    padding: clamp(64px, 5.8vw, 86px) clamp(24px, 2.5vw, 36px)
+      clamp(52px, 4.4vw, 64px) clamp(82px, 7.5vw, 138px);
   }
 
   .hero-copy-content {
@@ -3900,7 +3913,6 @@ onBeforeUnmount(() => {
 
   .hero-intro {
     max-width: min(550px, 92%);
-    margin-top: clamp(12px, 1.2vw, 18px);
     font-size: clamp(12px, 0.92vw, 14px);
   }
 
@@ -4210,8 +4222,6 @@ onBeforeUnmount(() => {
   }
 }
 
-
-
 /* ============================================================
    首頁流動式 RWD
    功能：只控制 1179px 以下的平板與手機；1180px 以上桌機版完全沿用既有排版。
@@ -4242,7 +4252,8 @@ onBeforeUnmount(() => {
     width: auto;
     height: auto;
     min-height: clamp(460px, 48vw, 520px);
-    padding: clamp(50px, 6vw, 70px) clamp(28px, 4vw, 46px) clamp(54px, 6vw, 72px) clamp(48px, 6vw, 72px);
+    padding: clamp(50px, 6vw, 70px) clamp(28px, 4vw, 46px)
+      clamp(54px, 6vw, 72px) clamp(48px, 6vw, 72px);
     justify-content: center;
   }
 
@@ -4440,7 +4451,8 @@ onBeforeUnmount(() => {
     width: 100%;
     height: auto;
     min-height: 0;
-    padding: clamp(34px, 5vw, 48px) clamp(34px, 6vw, 56px) clamp(72px, 9vw, 88px);
+    padding: clamp(34px, 5vw, 48px) clamp(34px, 6vw, 56px)
+      clamp(72px, 9vw, 88px);
     justify-content: flex-start;
   }
 
@@ -4923,8 +4935,6 @@ onBeforeUnmount(() => {
   }
 }
 
-
-
 /* ============================================================
    產品分類中小尺寸排版修正
    功能：桌機版不動；平板 4 欄、手機 2 欄，最後一列自動置中。
@@ -5015,8 +5025,6 @@ onBeforeUnmount(() => {
   }
 }
 
-
-
 /* ============================================================
    手機版產品分類 Grid 修正
    功能：640px 以下改為真正 2 欄 Grid，最後單數項目跨兩欄置中。
@@ -5073,96 +5081,6 @@ onBeforeUnmount(() => {
     font-size: 12px;
     line-height: 1.35;
   }
-}
-
-
-/* ============================================================
-   首頁內容物淡入
-   功能：背景直接顯示；推薦商品懸浮框先出現後，只讓文字、圖片、卡片等內容物淡入。
-============================================================ */
-.home-page:not(.home-content-ready) .hero-eyebrow,
-.home-page:not(.home-content-ready) .hero-copy-content,
-.home-page:not(.home-content-ready) .hero-intro,
-.home-page:not(.home-content-ready) .hero-actions,
-.home-page:not(.home-content-ready) .hero-dots,
-.home-page:not(.home-content-ready) .hero-media img,
-.home-page:not(.home-content-ready) .service-card,
-.home-page:not(.home-content-ready) .products-heading,
-.home-page:not(.home-content-ready) .reasons-soft-heading,
-.home-page:not(.home-content-ready) .videos-heading { opacity: 0; }
-
-.home-page:not(.home-content-ready) .hero-eyebrow,
-.home-page:not(.home-content-ready) .hero-copy-content,
-.home-page:not(.home-content-ready) .hero-intro,
-.home-page:not(.home-content-ready) .hero-actions,
-.home-page:not(.home-content-ready) .hero-dots,
-.home-page:not(.home-content-ready) .service-card,
-.home-page:not(.home-content-ready) .products-heading,
-.home-page:not(.home-content-ready) .reasons-soft-heading,
-.home-page:not(.home-content-ready) .videos-heading { transform: translateY(10px); }
-
-.home-content-ready .hero-eyebrow,
-.home-content-ready .hero-copy-content,
-.home-content-ready .hero-intro,
-.home-content-ready .hero-actions,
-.home-content-ready .hero-dots,
-.home-content-ready .service-card,
-.home-content-ready .products-heading,
-.home-content-ready .reasons-soft-heading,
-.home-content-ready .videos-heading {
-  opacity: 1;
-  transform: translateY(0);
-  transition: opacity .75s cubic-bezier(.22,1,.36,1), transform .75s cubic-bezier(.22,1,.36,1);
-}
-
-.home-content-ready .hero-media img { opacity: 1; transition: opacity .85s ease; }
-
-.home-content-ready .category-item,
-.home-content-ready .product-card,
-.home-content-ready .reason-experience-block,
-.home-content-ready .reason-soft-item,
-.home-content-ready .video-card { animation: home-object-fade-in .68s cubic-bezier(.22,1,.36,1) backwards; }
-.home-content-ready .service-card:nth-child(2),
-.home-content-ready .category-item:nth-child(2),
-.home-content-ready .product-card:nth-child(2),
-.home-content-ready .reason-soft-item:nth-child(2),
-.home-content-ready .video-card:nth-child(2) { animation-delay: .06s; }
-.home-content-ready .service-card:nth-child(3),
-.home-content-ready .category-item:nth-child(3),
-.home-content-ready .product-card:nth-child(3),
-.home-content-ready .reason-soft-item:nth-child(3),
-.home-content-ready .video-card:nth-child(3) { animation-delay: .12s; }
-.home-content-ready .service-card:nth-child(4),
-.home-content-ready .category-item:nth-child(4),
-.home-content-ready .product-card:nth-child(4),
-.home-content-ready .reason-soft-item:nth-child(4) { animation-delay: .18s; }
-@keyframes home-object-fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@media (prefers-reduced-motion: reduce) {
-  .home-page:not(.home-content-ready) .hero-eyebrow,
-  .home-page:not(.home-content-ready) .hero-copy-content,
-  .home-page:not(.home-content-ready) .hero-intro,
-  .home-page:not(.home-content-ready) .hero-actions,
-  .home-page:not(.home-content-ready) .hero-dots,
-  .home-page:not(.home-content-ready) .hero-media img,
-  .home-page:not(.home-content-ready) .service-card,
-  .home-page:not(.home-content-ready) .products-heading,
-  .home-page:not(.home-content-ready) .reasons-soft-heading,
-  .home-page:not(.home-content-ready) .videos-heading { transform: none; }
-  .home-content-ready .hero-eyebrow,
-  .home-content-ready .hero-copy-content,
-  .home-content-ready .hero-intro,
-  .home-content-ready .hero-actions,
-  .home-content-ready .hero-dots,
-  .home-content-ready .hero-media img,
-  .home-content-ready .service-card,
-  .home-content-ready .products-heading,
-  .home-content-ready .reasons-soft-heading,
-  .home-content-ready .videos-heading { transition-duration: .01ms !important; }
-  .home-content-ready .category-item,
-  .home-content-ready .product-card,
-  .home-content-ready .reason-experience-block,
-  .home-content-ready .reason-soft-item,
-  .home-content-ready .video-card { animation: none !important; }
 }
 
 </style>

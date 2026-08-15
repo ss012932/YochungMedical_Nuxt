@@ -2448,6 +2448,142 @@ input:checked + .toggle-slider:before {
   margin-right: 8px;
 }
 
+/* ============================================================
+   商品新增 / 編輯 Modal 橫向管理版面
+   功能：只調整視覺排版，不更動 v-model、事件、驗證、API 與圖片上傳邏輯。
+   桌機將基本資料、商品規格、商品圖片、商品描述橫向排列，讓管理員快速掃描。
+============================================================ */
+.product-modal {
+  width: min(96vw, 1220px);
+  max-width: 1220px;
+  max-height: 88dvh;
+}
+
+.product-modal .modal-header {
+  flex: 0 0 auto;
+  padding: 16px 22px;
+}
+
+.product-modal .modal-body {
+  max-height: calc(88dvh - 66px);
+  padding: 20px 22px 18px;
+  overflow-y: auto;
+}
+
+.product-modal .product-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 18px;
+  align-items: stretch;
+}
+
+/* 功能：每個資訊區塊改成卡片，桌機兩欄並排。 */
+.product-modal .form-section {
+  min-width: 0;
+  margin: 0;
+  padding: 16px;
+  background: #fbfcfe;
+  border: 1px solid #e4eaf0;
+  border-radius: 10px;
+}
+
+.product-modal .form-section:last-child {
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e4eaf0;
+}
+
+.product-modal .section-title {
+  margin: 0 0 14px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #e7edf3;
+  font-size: 15px;
+}
+
+/* 功能：基本資料的商品名稱與類別同一列顯示。 */
+.product-modal .form-section:nth-of-type(1) {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 14px;
+}
+
+.product-modal .form-section:nth-of-type(1) .section-title {
+  grid-column: 1 / -1;
+}
+
+.product-modal .form-section:nth-of-type(1) .form-group {
+  margin: 0;
+}
+
+/* 功能：售價與庫存維持同一橫列，壓縮不必要的上下留白。 */
+.product-modal .form-section:nth-of-type(2) .form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+
+.product-modal .form-group {
+  margin-bottom: 0;
+}
+
+.product-modal .form-group label {
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.product-modal .form-control {
+  min-height: 42px;
+  padding: 9px 11px;
+}
+
+/* 功能：圖片預覽固定成管理用尺寸，避免原圖把整個編輯框往下撐。 */
+.product-modal .image-upload-container {
+  height: 210px;
+  min-height: 210px;
+  aspect-ratio: auto;
+  margin: 0;
+  background: #fff;
+}
+
+.product-modal .image-preview img {
+  object-fit: contain;
+  background: #fff;
+}
+
+/* 功能：描述區直接與圖片區並排，textarea 使用固定高度方便快速閱讀。 */
+.product-modal textarea.form-control {
+  height: 210px;
+  min-height: 210px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.product-modal .form-actions {
+  grid-column: 1 / -1;
+  margin-top: 0;
+  padding-top: 2px;
+}
+
+/* 平板以下回到單欄，避免橫向欄位過度擁擠。 */
+@media (max-width: 900px) {
+  .product-modal {
+    width: min(94vw, 760px);
+  }
+
+  .product-modal .product-form {
+    grid-template-columns: 1fr;
+  }
+
+  .product-modal .form-section:nth-of-type(1),
+  .product-modal .form-section:nth-of-type(2) .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .product-modal .form-actions {
+    grid-column: auto;
+  }
+}
+
 /* 改進商品詳情模態窗樣式 */
 .product-detail-modal {
   max-width: 800px;

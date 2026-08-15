@@ -214,6 +214,7 @@
           <div class="modal-heading-block">
             <div class="modal-meta-row">
               <span class="modal-category-label">{{ $ui(getCategoryName(selectedProduct.categoryId)) }}</span>
+              <!-- 功能：庫存狀態與商品分類同一列，右側顯示庫存標籤。 -->
               <span
                 class="modal-stock-pill"
                 :class="{ empty: selectedProduct.stock === 0 }"
@@ -229,13 +230,8 @@
           </div>
 
           <template v-if="isInquiryProduct(selectedProduct)">
-            <div class="modal-purchase-panel inquiry-purchase-panel">
-              <div class="modal-price-block">
-                <span class="modal-price-label">{{ $ui('洽詢客服') }}</span>
-                <strong class="inquiry-price-text">{{ $ui('價格與採購資訊請洽專員') }}</strong>
-              </div>
-            </div>
-            <div class="modal-action-group">
+            <!-- 功能：洽詢客服商品不顯示價格/採購資訊區塊，只保留最底部客服按鈕。 -->
+            <div class="modal-action-group inquiry-action-group">
               <button
                 type="button"
                 class="modal-cart-btn modal-cart-primary inquiry-primary-btn"
@@ -276,49 +272,12 @@
       </div>
     </div>
 
-    <!-- 洽詢客服 Modal：僅供「洽詢客服」類別商品使用。 -->
-    <div v-if="inquiryProduct" class="inquiry-modal">
-      <section class="inquiry-modal-panel" role="dialog" aria-modal="true" :aria-label="$ui('洽詢客服')">
-        <button type="button" class="inquiry-modal-close" @click="closeInquiryModal" :aria-label="$ui('關閉')">×</button>
-
-        <div class="inquiry-modal-heading">
-          <span class="inquiry-eyebrow">{{ $ui('產品洽詢') }}</span>
-          <h2>{{ $ui('洽詢客服') }}</h2>
-          <p>{{ $ui('您正在洽詢') }}：<strong>{{ $ui(inquiryProduct.name) }}</strong></p>
-          <small>{{ $ui('歡迎選擇以下方式聯絡我們，我們將盡快為您提供產品價格、規格與採購資訊。') }}</small>
-        </div>
-
-        <div class="inquiry-contact-grid">
-          <a class="inquiry-contact-card" href="tel:+88633710988">
-            <span class="inquiry-contact-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M6.5 3.5 9 8l-2 2c1.6 3.2 3.8 5.4 7 7l2-2 4.5 2.5c.4.2.6.7.5 1.2-.4 1.7-1.9 2.8-3.7 2.8C9.2 21.5 2.5 14.8 2.5 6.7c0-1.8 1.1-3.3 2.8-3.7.5-.1 1 .1 1.2.5Z"/></svg>
-            </span>
-            <span><b>{{ $ui('電話') }}</b><small>(03) 371-0988</small></span>
-          </a>
-
-          <a class="inquiry-contact-card" href="mailto:yochung@rongchun.com.tw">
-            <span class="inquiry-contact-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-            </span>
-            <span><b>{{ $ui('電子郵件') }}</b><small>yochung@rongchun.com.tw</small></span>
-          </a>
-        </div>
-
-        <a class="inquiry-line-btn" href="https://lin.ee/bN5528E" target="_blank" rel="noopener noreferrer">
-          <img src="@/assets/image/line.webp" alt="LINE" />
-          <span>{{ $ui('使用 LINE 洽詢') }}</span>
-        </a>
-
-        <div class="inquiry-social-row">
-          <span>{{ $ui('社群平台') }}</span>
-          <div class="inquiry-social-links">
-            <a href="https://www.instagram.com/yochungmed/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><img src="@/assets/image/instagram.webp" alt="Instagram" /></a>
-            <a href="https://www.facebook.com/yochung.tw/?locale=zh_TW" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><img src="@/assets/image/Facebook.webp" alt="Facebook" /></a>
-            <a href="https://lin.ee/bN5528E" target="_blank" rel="noopener noreferrer" aria-label="LINE"><img src="@/assets/image/line.webp" alt="LINE" /></a>
-          </div>
-        </div>
-      </section>
-    </div>
+    <!-- 功能：商品專區與首頁共用同一個洽詢客服框，避免兩份聯絡資訊日後不同步。 -->
+    <InquiryContactModal
+      :is-visible="Boolean(inquiryProduct)"
+      :product-name="inquiryProduct?.name ?? ''"
+      @close="closeInquiryModal"
+    />
       </div>
     </Teleport>
 
@@ -1426,7 +1385,7 @@ onMounted(async () => {
 
 .products-page .toolbar {
   display: grid !important;
-  grid-template-columns: minmax(300px, 1fr) auto 170px !important;
+  grid-template-columns: minmax(300px, 1fr) 170px !important;
   gap: 14px !important;
   align-items: center !important;
   margin-bottom: 14px !important;
@@ -1447,6 +1406,8 @@ onMounted(async () => {
 }
 
 .products-page .product-count {
+  justify-self: end !important;
+  text-align: right !important;
   font-size: 11.5px !important;
 }
 
@@ -1829,7 +1790,9 @@ onMounted(async () => {
   font-size: 12px !important;
 }
 .products-page .product-card h3 {
-  min-height: 50px !important;
+  /* 功能：商品名稱依實際行數決定高度，避免單行標題硬撐成兩行高度，造成描述文字離太遠。 */
+  min-height: 0 !important;
+  margin-bottom: 6px !important;
   font-size: 18px !important;
   line-height: 1.45 !important;
 }
@@ -2083,6 +2046,7 @@ onMounted(async () => {
   font-size: 12px !important;
   font-weight: 700 !important;
 }
+
 .products-page .modal-price-block strong {
   color: #8b347f !important;
   font-size: 34px !important;
@@ -2504,9 +2468,13 @@ onMounted(async () => {
   background: #943f86;
   border-color: #943f86;
 }
-.inquiry-purchase-panel { background: #faf7fa !important; }
-.inquiry-price-text { color: #8f347f !important; font-size: clamp(17px, 1.5vw, 22px) !important; }
 .inquiry-primary-btn { justify-content: center !important; }
+
+/* 功能：移除洽詢客服價格區塊後，仍把客服按鈕固定推到右側資訊區最底部。 */
+.inquiry-action-group {
+  margin-top: auto !important;
+  padding-top: 24px !important;
+}
 
 .inquiry-modal {
   position: fixed;
@@ -2833,15 +2801,48 @@ onMounted(async () => {
    功能：分類、庫存、價格統一沿右側內容左邊界排列，避免資訊一左一右分散。
 ============================================================ */
 .products-page .modal-meta-row {
-  justify-content: flex-start !important;
-  flex-wrap: wrap !important;
-  gap: 10px 12px !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  gap: 12px !important;
+}
+
+.products-page .modal-meta-row .modal-category-label {
+  min-width: 0 !important;
+  flex: 1 1 auto !important;
+}
+
+.products-page .modal-meta-row .modal-stock-pill {
+  flex: 0 0 auto !important;
 }
 
 .products-page .modal-stock-pill {
-  min-height: 32px !important;
-  padding: 0 12px !important;
-  font-size: 12px !important;
+  min-height: 38px !important;
+  padding: 0 15px !important;
+  color: #2f7445 !important;
+  background: #e6f5e9 !important;
+  border: 1px solid #b9ddc2 !important;
+  border-radius: 999px !important;
+  box-shadow: 0 5px 14px rgba(47, 116, 69, 0.13) !important;
+  font-size: 13px !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.products-page .modal-stock-pill.empty {
+  color: #a04e59 !important;
+  background: #fff0f2 !important;
+  border-color: #efc7cd !important;
+  box-shadow: 0 5px 14px rgba(160, 78, 89, 0.11) !important;
+}
+
+.products-page .modal-stock-pill .modal-stock-dot {
+  width: 9px !important;
+  height: 9px !important;
+  box-shadow: 0 0 0 4px rgba(47, 116, 69, 0.12) !important;
+}
+
+.products-page .modal-stock-pill.empty .modal-stock-dot {
+  box-shadow: 0 0 0 4px rgba(160, 78, 89, 0.10) !important;
 }
 
 .products-page .modal-purchase-panel {
@@ -2860,8 +2861,9 @@ onMounted(async () => {
   }
 
   .products-page .modal-stock-pill {
-    min-height: 30px !important;
-    padding: 0 10px !important;
+    min-height: 34px !important;
+    padding: 0 12px !important;
+    font-size: 12.5px !important;
   }
 }
 
@@ -2911,6 +2913,33 @@ onMounted(async () => {
     width: 58px !important;
     min-width: 58px !important;
     margin: 0 !important;
+  }
+}
+
+
+/* ============================================================
+   商品詳情長形圖片完整顯示
+   功能：桌機 / 平板改用絕對定位的固定圖片視窗。
+   這樣不再受 img 原始長寬比與 CSS Grid intrinsic size 影響；
+   直式長圖會強制完整縮放在白色卡片內，不裁切、不溢出。
+============================================================ */
+@media (min-width: 561px) {
+  .products-page .modal-image-card {
+    position: relative !important;
+    overflow: hidden !important;
+  }
+
+  .products-page .modal-image-card img {
+    position: absolute !important;
+    inset: 28px !important;
+    display: block !important;
+    width: calc(100% - 56px) !important;
+    height: calc(100% - 56px) !important;
+    max-width: none !important;
+    max-height: none !important;
+    margin: 0 !important;
+    object-fit: contain !important;
+    object-position: center center !important;
   }
 }
 

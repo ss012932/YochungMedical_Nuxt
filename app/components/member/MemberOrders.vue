@@ -161,8 +161,9 @@
       </button>
     </div>
 
-    <!-- 訂單詳情彈窗 -->
-    <div class="modal-overlay" v-if="showOrderDetail">
+    <!-- 訂單詳情彈窗：Teleport 到 body，避免被 Header / 會員內容 stacking context 蓋住。 -->
+    <Teleport to="body">
+      <div class="modal-overlay" v-if="showOrderDetail">
       <div class="modal-container" @click.stop>
         <div class="modal-header">
           <h3 class="modal-title">
@@ -329,6 +330,7 @@
         </div>
       </div>
     </div>
+    </Teleport>
 
     <!-- 通知 -->
     <div
@@ -2834,4 +2836,205 @@ export default {
   .summary-detail-toggle, .summary-view-btn { flex: 1; }
   .compact-products-panel { padding: 4px 14px 14px !important; }
 }
+
+
+/* ============================================================
+   我的訂單：流動式 RWD + 訂單詳情最高層
+   功能：尺寸使用 clamp / minmax 連續縮放，減少固定寬度造成的跳版；
+   訂單詳情 Teleport 到 body 後使用高於 Header 的 z-index。
+============================================================ */
+.modal-overlay {
+  z-index: 2147482000 !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  padding: clamp(10px, 2vw, 24px) !important;
+}
+
+.modal-container {
+  width: min(100%, 860px) !important;
+  max-width: min(860px, calc(100vw - 20px)) !important;
+  max-height: min(92dvh, 920px) !important;
+}
+
+.orders-manager-card {
+  margin-right: clamp(0px, 1.4vw, 20px) !important;
+  margin-left: clamp(0px, 1.4vw, 20px) !important;
+  border-radius: clamp(12px, 1.2vw, 18px) !important;
+}
+
+.orders-manager-head {
+  gap: clamp(12px, 1.5vw, 20px) !important;
+  padding: clamp(16px, 1.7vw, 22px) clamp(16px, 2vw, 24px) !important;
+}
+
+.orders-manager-head h3 {
+  font-size: clamp(18px, 1.7vw, 22px) !important;
+}
+
+.order-toolbar {
+  grid-template-columns:
+    minmax(220px, 1.55fr)
+    minmax(145px, .65fr)
+    minmax(145px, .65fr)
+    auto !important;
+  gap: clamp(8px, .9vw, 12px) !important;
+  padding: clamp(11px, 1.2vw, 14px) clamp(14px, 2vw, 24px) !important;
+}
+
+.toolbar-search,
+.toolbar-filter,
+.reset-filter-btn {
+  min-height: clamp(40px, 4vw, 44px) !important;
+}
+
+.compact-order-main {
+  grid-template-columns:
+    minmax(220px, 1.6fr)
+    minmax(150px, .72fr)
+    minmax(110px, .48fr)
+    auto !important;
+  gap: clamp(10px, 1.5vw, 22px) !important;
+  min-height: clamp(88px, 8vw, 102px) !important;
+  padding: clamp(14px, 1.5vw, 18px) clamp(14px, 2vw, 24px) !important;
+}
+
+.order-total-column strong {
+  font-size: clamp(16px, 1.5vw, 18px) !important;
+}
+
+.compact-products-panel {
+  padding-right: clamp(14px, 2vw, 24px) !important;
+  padding-left: clamp(14px, 2vw, 24px) !important;
+}
+
+.compact-products-head,
+.compact-product-row {
+  grid-template-columns:
+    minmax(180px, 1fr)
+    minmax(90px, 130px)
+    minmax(58px, 80px)
+    minmax(100px, 140px) !important;
+  gap: clamp(8px, 1vw, 14px) !important;
+}
+
+/* 中型尺寸：主要資訊仍保持一列，操作按鈕自然換到下一列。 */
+@media (max-width: 980px) {
+  .order-toolbar {
+    grid-template-columns: minmax(220px, 1fr) repeat(2, minmax(140px, .55fr)) !important;
+  }
+
+  .reset-filter-btn {
+    grid-column: 1 / -1 !important;
+    width: auto !important;
+    justify-self: end !important;
+  }
+
+  .compact-order-main {
+    grid-template-columns: minmax(220px, 1fr) minmax(150px, auto) minmax(110px, 140px) !important;
+  }
+
+  .order-row-actions {
+    grid-column: 1 / -1 !important;
+    justify-content: flex-end !important;
+    margin-top: 0 !important;
+  }
+}
+
+/* 小型尺寸：搜尋獨佔一列；狀態與金額並排，操作按鈕維持可點擊寬度。 */
+@media (max-width: 700px) {
+  .orders-manager-card {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+
+  .orders-manager-head {
+    align-items: flex-start !important;
+    padding: clamp(15px, 4vw, 18px) !important;
+  }
+
+  .order-toolbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    padding: clamp(10px, 3.4vw, 14px) !important;
+  }
+
+  .toolbar-search {
+    grid-column: 1 / -1 !important;
+  }
+
+  .reset-filter-btn {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    justify-self: stretch !important;
+  }
+
+  .compact-order-main {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: clamp(10px, 3vw, 14px) !important;
+    padding: clamp(13px, 4vw, 16px) !important;
+  }
+
+  .order-primary-info,
+  .order-row-actions {
+    grid-column: 1 / -1 !important;
+  }
+
+  .order-status-column,
+  .order-total-column {
+    align-self: start !important;
+  }
+
+  .order-row-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px !important;
+  }
+
+  .summary-detail-toggle,
+  .summary-view-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+  }
+
+  .compact-products-head {
+    display: none !important;
+  }
+
+  .compact-product-row {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    gap: 7px 12px !important;
+  }
+
+  .compact-product-main {
+    grid-column: 1 / -1 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .orders-manager-head {
+    flex-direction: column !important;
+  }
+
+  .manager-count {
+    align-self: flex-start;
+  }
+
+  .order-toolbar {
+    grid-template-columns: 1fr !important;
+  }
+
+  .toolbar-search,
+  .toolbar-filter,
+  .reset-filter-btn {
+    grid-column: 1 !important;
+  }
+
+  .modal-container {
+    max-width: calc(100vw - 12px) !important;
+    max-height: calc(100dvh - 12px) !important;
+    border-radius: 12px !important;
+  }
+}
+
 </style>

@@ -7,7 +7,12 @@
   <header class="site-header" :class="languageLayoutClass">
     <div class="header-container">
       <!-- 品牌區：Logo + 中英文公司名稱 -->
-      <NuxtLink to="/" class="brand" :aria-label="$ui('回到祐強醫療儀器首頁')" @click="closeMobileMenu">
+      <NuxtLink
+        to="/"
+        class="brand"
+        :aria-label="$ui('回到祐強醫療儀器首頁')"
+        @click="closeMobileMenu"
+      >
         <img
           class="brand-logo"
           src="@/assets/image/logo.webp"
@@ -18,15 +23,27 @@
           <strong class="brand-name">
             <!-- 功能：桌機保留完整公司名稱；手機縮短英文品牌名稱，避免擠壓漢堡按鈕。 -->
             <span class="brand-name-desktop">
-              {{ showLocalizedBrandName ? $ui('祐強醫療儀器有限公司') : 'YoChung Medical Instrument Co., Ltd.' }}
+              {{
+                showLocalizedBrandName
+                  ? $ui("祐強醫療儀器有限公司")
+                  : "YoChung Medical Instrument Co., Ltd."
+              }}
             </span>
             <span class="brand-name-mobile">
-              {{ showLocalizedBrandName ? $ui('祐強醫療儀器有限公司') : 'YoChung Medical Instrument Co., Ltd.' }}
+              {{
+                showLocalizedBrandName
+                  ? $ui("祐強醫療儀器有限公司")
+                  : "YoChung Medical Instrument Co., Ltd."
+              }}
             </span>
           </strong>
           <span v-if="showLocalizedBrandName" class="brand-name-en notranslate">
-            <span class="brand-name-desktop">YoChung Medical Instrument Co., Ltd.</span>
-            <span class="brand-name-mobile">YoChung Medical Instrument Co., Ltd.</span>
+            <span class="brand-name-desktop"
+              >YoChung Medical Instrument Co., Ltd.</span
+            >
+            <span class="brand-name-mobile"
+              >YoChung Medical Instrument Co., Ltd.</span
+            >
           </span>
         </div>
       </NuxtLink>
@@ -49,20 +66,31 @@
           href="https://www.christylove.com.tw/"
           target="_blank"
           rel="noopener noreferrer"
-        >{{ $ui('網頁製作') }}</a>
+          >{{ $ui("網頁製作") }}</a
+        >
 
-        <div v-if="authChecked && isLoggedIn" ref="accountMenuRef" class="account-menu">
+        <div
+          v-if="authChecked && isLoggedIn"
+          ref="accountMenuRef"
+          class="account-menu"
+        >
           <button
             type="button"
             class="nav-link account-trigger"
-            :class="{ active: route.path.startsWith(isAdmin ? '/admin' : '/member') }"
+            :class="{
+              active: route.path.startsWith(isAdmin ? '/admin' : '/member'),
+            }"
             @click="toggleAccountMenu"
           >
-            {{ $ui(isAdmin ? '控制中心' : '會員中心') }}
+            {{ $ui(isAdmin ? "管理中心" : "會員中心") }}
           </button>
           <div v-if="accountMenuOpen" class="account-dropdown">
-            <NuxtLink :to="isAdmin ? '/admin' : '/member'" @click="accountMenuOpen = false">{{ $ui('前往') }}</NuxtLink>
-            <button type="button" @click="logout">{{ $ui('登出') }}</button>
+            <NuxtLink
+              :to="isAdmin ? '/admin' : '/member'"
+              @click="accountMenuOpen = false"
+              >{{ $ui("前往") }}</NuxtLink
+            >
+            <button type="button" @click="logout">{{ $ui("登出") }}</button>
           </div>
         </div>
         <NuxtLink
@@ -70,21 +98,37 @@
           to="/login"
           class="nav-link"
           :class="{ active: route.path === '/login' }"
-        >{{ $ui('註冊 / 登入') }}</NuxtLink>
+          >{{ $ui("註冊 / 登入") }}</NuxtLink
+        >
         <span v-else class="account-placeholder" aria-hidden="true"></span>
       </nav>
 
-
       <!-- 桌面版幣值選擇器 -->
       <div ref="currencyMenuRef" class="currency-menu desktop-currency">
-        <button class="currency-trigger" type="button" :aria-expanded="currencyMenuOpen" aria-haspopup="menu" @click="toggleCurrencyMenu">
+        <button
+          class="currency-trigger"
+          type="button"
+          :aria-expanded="currencyMenuOpen"
+          aria-haspopup="menu"
+          @click="toggleCurrencyMenu"
+        >
           <span class="currency-symbol">{{ currentCurrency.symbol }}</span>
           <span>{{ currentCurrency.code }}</span>
-          <svg class="chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7.5 5 5 5-5" /></svg>
+          <svg class="chevron" viewBox="0 0 20 20" aria-hidden="true">
+            <path d="m5 7.5 5 5 5-5" />
+          </svg>
         </button>
         <div v-if="currencyMenuOpen" class="currency-dropdown" role="menu">
-          <button v-for="currency in currencyOptions" :key="currency.code" type="button" role="menuitem" :class="{ selected: selectedCurrency === currency.code }" @click="changeCurrency(currency.code)">
-            <span>{{ currency.symbol }}</span><strong>{{ currency.code }}</strong>
+          <button
+            v-for="currency in currencyOptions"
+            :key="currency.code"
+            type="button"
+            role="menuitem"
+            :class="{ selected: selectedCurrency === currency.code }"
+            @click="changeCurrency(currency.code)"
+          >
+            <span>{{ currency.symbol }}</span
+            ><strong>{{ currency.code }}</strong>
           </button>
         </div>
       </div>
@@ -100,7 +144,9 @@
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="12" cy="12" r="9" />
-            <path d="M3 12h18M12 3c2.2 2.4 3.4 5.4 3.4 9S14.2 18.6 12 21M12 3C9.8 5.4 8.6 8.4 8.6 12S9.8 18.6 12 21" />
+            <path
+              d="M3 12h18M12 3c2.2 2.4 3.4 5.4 3.4 9S14.2 18.6 12 21M12 3C9.8 5.4 8.6 8.4 8.6 12S9.8 18.6 12 21"
+            />
           </svg>
           <span>{{ currentLanguageLabel }}</span>
           <svg class="chevron" viewBox="0 0 20 20" aria-hidden="true">
@@ -157,36 +203,69 @@
             target="_blank"
             rel="noopener noreferrer"
             @click="closeMobileMenu"
-          >{{ $ui('網頁製作') }}</a>
+            >{{ $ui("網頁製作") }}</a
+          >
 
           <template v-if="authChecked && isLoggedIn">
             <NuxtLink
               :to="isAdmin ? '/admin' : '/member'"
-              :class="{ active: route.path.startsWith(isAdmin ? '/admin' : '/member') }"
+              :class="{
+                active: route.path.startsWith(isAdmin ? '/admin' : '/member'),
+              }"
               @click="closeMobileMenu"
             >
-              {{ $ui(isAdmin ? '控制中心' : '會員中心') }}
+              {{ $ui(isAdmin ? "管理中心" : "會員中心") }}
             </NuxtLink>
-            <button type="button" class="mobile-logout" @click="logout">{{ $ui('登出') }}</button>
+            <button type="button" class="mobile-logout" @click="logout">
+              {{ $ui("登出") }}
+            </button>
           </template>
           <NuxtLink
             v-else-if="authChecked"
             to="/login"
             :class="{ active: route.path === '/login' }"
             @click="closeMobileMenu"
-          >{{ $ui('註冊 / 登入') }}</NuxtLink>
+            >{{ $ui("註冊 / 登入") }}</NuxtLink
+          >
         </nav>
-
 
         <!-- 行動版幣值選單 -->
         <div class="mobile-currency-section">
-          <button type="button" class="mobile-currency-title mobile-collapse-title" :aria-expanded="mobileCurrencyOpen" @click="mobileCurrencyOpen = !mobileCurrencyOpen; if (mobileCurrencyOpen) mobileLanguageOpen = false">
-            <span class="mobile-title-content"><span class="currency-symbol">{{ currentCurrency.symbol }}</span><span>{{ $ui('幣值 / Currency') }}</span></span>
-            <svg class="mobile-collapse-chevron" :class="{ open: mobileCurrencyOpen }" viewBox="0 0 20 20" aria-hidden="true"><path d="m6 8 4 4 4-4" /></svg>
+          <button
+            type="button"
+            class="mobile-currency-title mobile-collapse-title"
+            :aria-expanded="mobileCurrencyOpen"
+            @click="
+              mobileCurrencyOpen = !mobileCurrencyOpen;
+              if (mobileCurrencyOpen) mobileLanguageOpen = false;
+            "
+          >
+            <span class="mobile-title-content"
+              ><span class="currency-symbol">{{ currentCurrency.symbol }}</span
+              ><span>{{ $ui("幣值 / Currency") }}</span></span
+            >
+            <svg
+              class="mobile-collapse-chevron"
+              :class="{ open: mobileCurrencyOpen }"
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+            >
+              <path d="m6 8 4 4 4-4" />
+            </svg>
           </button>
-          <div v-show="mobileCurrencyOpen" class="mobile-currency-options mobile-collapse-content">
-            <button v-for="currency in currencyOptions" :key="'mobile-currency-' + currency.code" type="button" :class="{ selected: selectedCurrency === currency.code }" @click="changeCurrency(currency.code)">
-              <span>{{ currency.symbol }}</span><strong>{{ currency.code }}</strong>
+          <div
+            v-show="mobileCurrencyOpen"
+            class="mobile-currency-options mobile-collapse-content"
+          >
+            <button
+              v-for="currency in currencyOptions"
+              :key="'mobile-currency-' + currency.code"
+              type="button"
+              :class="{ selected: selectedCurrency === currency.code }"
+              @click="changeCurrency(currency.code)"
+            >
+              <span>{{ currency.symbol }}</span
+              ><strong>{{ currency.code }}</strong>
             </button>
           </div>
         </div>
@@ -197,14 +276,19 @@
             type="button"
             class="mobile-language-title mobile-collapse-title"
             :aria-expanded="mobileLanguageOpen"
-            @click="mobileLanguageOpen = !mobileLanguageOpen; if (mobileLanguageOpen) mobileCurrencyOpen = false"
+            @click="
+              mobileLanguageOpen = !mobileLanguageOpen;
+              if (mobileLanguageOpen) mobileCurrencyOpen = false;
+            "
           >
             <span class="mobile-title-content">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <circle cx="12" cy="12" r="9" />
-                <path d="M3 12h18M12 3c2.2 2.4 3.4 5.4 3.4 9S14.2 18.6 12 21M12 3C9.8 5.4 8.6 8.4 8.6 12S9.8 18.6 12 21" />
+                <path
+                  d="M3 12h18M12 3c2.2 2.4 3.4 5.4 3.4 9S14.2 18.6 12 21M12 3C9.8 5.4 8.6 8.4 8.6 12S9.8 18.6 12 21"
+                />
               </svg>
-              <span>{{ $ui('語言 / Language') }}</span>
+              <span>{{ $ui("語言 / Language") }}</span>
             </span>
             <svg
               class="mobile-collapse-chevron"
@@ -248,130 +332,161 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import Swal from 'sweetalert2'
-import { useApi } from '~/composables/utils/api'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import Swal from "sweetalert2";
+import { useApi } from "~/composables/utils/api";
 
 // ==============================
 // 導覽資料
 // 說明：沿用舊站實際頁面，不使用設計稿中的範例選單文字。
 // ==============================
 const navItems = [
-  { label: '首頁', to: '/' },
-  { label: '關於祐強', to: '/about' },
-  { label: '商品專區', to: '/products' },
-  { label: '產品影片', to: '/video' },
-  { label: '聯絡我們', to: '/contact' },
-]
+  { label: "首頁", to: "/" },
+  { label: "關於祐強", to: "/about" },
+  { label: "商品專區", to: "/products" },
+  { label: "產品影片", to: "/video" },
+  { label: "聯絡我們", to: "/contact" },
+];
 
 const languages = [
-  { code: 'zh-TW', label: '繁中' },
-  { code: 'zh-CN', label: '简中' },
-  { code: 'en', label: 'English' },
-  { code: 'ja', label: '日本語' },
-  { code: 'ko', label: '한국어' },
-  { code: 'vi', label: 'Tiếng Việt' },
-  { code: 'th', label: 'ภาษาไทย' },
-]
+  { code: "zh-TW", label: "繁中" },
+  { code: "zh-CN", label: "简中" },
+  { code: "en", label: "English" },
+  { code: "ja", label: "日本語" },
+  { code: "ko", label: "한국어" },
+  { code: "vi", label: "Tiếng Việt" },
+  { code: "th", label: "ภาษาไทย" },
+];
 
-const route = useRoute()
-const router = useRouter()
-const api = useApi()
-const { currencyOptions, selectedCurrency, currentCurrency, loadRates, setCurrency } = useCurrency()
+const route = useRoute();
+const router = useRouter();
+const api = useApi();
+const {
+  currencyOptions,
+  selectedCurrency,
+  currentCurrency,
+  loadRates,
+  setCurrency,
+} = useCurrency();
 // 登入顯示狀態使用 Nuxt useState 保存。
 // 功能：跨 layout 切換時保留已確認狀態，避免回首頁時「會員中心」短暫消失。
-const headerAuthUi = useCookie<{ loggedIn: boolean; isAdmin: boolean } | null>('yochung-header-auth-ui', {
-  default: () => null,
-  sameSite: 'lax'
-})
-const isLoggedIn = useState<boolean>('header-is-logged-in', () => headerAuthUi.value?.loggedIn ?? false)
-const authChecked = useState<boolean>('header-auth-checked', () => headerAuthUi.value !== null)
-const isAdmin = useState<boolean>('header-is-admin', () => headerAuthUi.value?.isAdmin ?? false)
-const userName = useState<string>('header-user-name', () => '')
-const accountMenuOpen = ref(false)
-const isCheckingAuth = ref(false)
-const mobileMenuOpen = ref(false)
-const languageMenuOpen = ref(false)
-const currencyMenuOpen = ref(false)
-const mobileCurrencyOpen = ref(false)
-const mobileLanguageOpen = ref(false)
+const headerAuthUi = useCookie<{ loggedIn: boolean; isAdmin: boolean } | null>(
+  "yochung-header-auth-ui",
+  {
+    default: () => null,
+    sameSite: "lax",
+  },
+);
+const isLoggedIn = useState<boolean>(
+  "header-is-logged-in",
+  () => headerAuthUi.value?.loggedIn ?? false,
+);
+const authChecked = useState<boolean>(
+  "header-auth-checked",
+  () => headerAuthUi.value !== null,
+);
+const isAdmin = useState<boolean>(
+  "header-is-admin",
+  () => headerAuthUi.value?.isAdmin ?? false,
+);
+const userName = useState<string>("header-user-name", () => "");
+const accountMenuOpen = ref(false);
+const isCheckingAuth = ref(false);
+const mobileMenuOpen = ref(false);
+const languageMenuOpen = ref(false);
+const currencyMenuOpen = ref(false);
+const mobileCurrencyOpen = ref(false);
+const mobileLanguageOpen = ref(false);
 
 // 功能：記住開啟手機選單前的頁面位置，關閉後回到原本位置。
-let mobileMenuScrollY = 0
-const { locale, setLocale } = useI18n()
-const uiLocale = useState<string>('ui-locale', () => 'zh-TW')
-const currentLanguage = computed(() => locale.value)
-const showLocalizedBrandName = computed(() => ['zh-TW', 'zh-CN'].includes(currentLanguage.value))
-const languageLayoutClass = computed(() => `lang-${currentLanguage.value.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}`)
-const languageMenuRef = ref<HTMLElement | null>(null)
-const currencyMenuRef = ref<HTMLElement | null>(null)
-const accountMenuRef = ref<HTMLElement | null>(null)
+let mobileMenuScrollY = 0;
+const { locale, setLocale } = useI18n();
+const uiLocale = useState<string>("ui-locale", () => "zh-TW");
+const currentLanguage = computed(() => locale.value);
+const showLocalizedBrandName = computed(() =>
+  ["zh-TW", "zh-CN"].includes(currentLanguage.value),
+);
+const languageLayoutClass = computed(
+  () =>
+    `lang-${currentLanguage.value.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}`,
+);
+const languageMenuRef = ref<HTMLElement | null>(null);
+const currencyMenuRef = ref<HTMLElement | null>(null);
+const accountMenuRef = ref<HTMLElement | null>(null);
 
 const currentLanguageLabel = computed(() => {
-  return languages.find((item) => item.code === currentLanguage.value)?.label ?? '繁中'
-})
+  return (
+    languages.find((item) => item.code === currentLanguage.value)?.label ??
+    "繁中"
+  );
+});
 
 // ==============================
 // 判斷目前導覽項目
 // 說明：首頁只在 / 時亮起，其餘頁面也包含子路由。
 // ==============================
 function isNavActive(path: string) {
-  if (path === '/') return route.path === '/'
-  return route.path === path || route.path.startsWith(`${path}/`)
+  if (path === "/") return route.path === "/";
+  return route.path === path || route.path.startsWith(`${path}/`);
 }
 
 async function checkAuth() {
-  if (isCheckingAuth.value) return
-  isCheckingAuth.value = true
+  if (isCheckingAuth.value) return;
+  isCheckingAuth.value = true;
   try {
-    const res:any = await api.get('/auth/me')
+    const res: any = await api.get("/auth/me");
     if (res.data.authenticated) {
-      isLoggedIn.value = true
-      isAdmin.value = !!res.data.isAdmin
-      headerAuthUi.value = { loggedIn: true, isAdmin: isAdmin.value }
-      userName.value = res.data.name || ''
+      isLoggedIn.value = true;
+      isAdmin.value = !!res.data.isAdmin;
+      headerAuthUi.value = { loggedIn: true, isAdmin: isAdmin.value };
+      userName.value = res.data.name || "";
     } else {
-      isLoggedIn.value = false
-      isAdmin.value = false
-      headerAuthUi.value = { loggedIn: false, isAdmin: false }
-      userName.value = ''
+      isLoggedIn.value = false;
+      isAdmin.value = false;
+      headerAuthUi.value = { loggedIn: false, isAdmin: false };
+      userName.value = "";
     }
   } catch {
-    isLoggedIn.value = false
-      isAdmin.value = false
-      headerAuthUi.value = { loggedIn: false, isAdmin: false }
-      userName.value = ''
+    isLoggedIn.value = false;
+    isAdmin.value = false;
+    headerAuthUi.value = { loggedIn: false, isAdmin: false };
+    userName.value = "";
   } finally {
-    authChecked.value = true
-    isCheckingAuth.value = false
+    authChecked.value = true;
+    isCheckingAuth.value = false;
   }
 }
 
 async function logout() {
   try {
-    await api.post('/logout')
+    await api.post("/logout");
     // 登出 API 成功後立即同步共用狀態，不進入「尚未確認」空白狀態。
-    isLoggedIn.value = false
-    authChecked.value = true
-    isAdmin.value = false
-    headerAuthUi.value = { loggedIn: false, isAdmin: false }
-    userName.value = ''
-    accountMenuOpen.value = false
-    mobileMenuOpen.value = false
-    await router.push('/login')
+    isLoggedIn.value = false;
+    authChecked.value = true;
+    isAdmin.value = false;
+    headerAuthUi.value = { loggedIn: false, isAdmin: false };
+    userName.value = "";
+    accountMenuOpen.value = false;
+    mobileMenuOpen.value = false;
+    await router.push("/login");
   } catch {
-    await Swal.fire({ icon: 'error', title: '登出失敗', text: '請稍後再試', confirmButtonText: '確定' })
+    await Swal.fire({
+      icon: "error",
+      title: "登出失敗",
+      text: "請稍後再試",
+      confirmButtonText: "確定",
+    });
   }
 }
 
 function toggleMobileMenu() {
-  mobileMenuOpen.value = !mobileMenuOpen.value
+  mobileMenuOpen.value = !mobileMenuOpen.value;
 }
 
 function closeMobileMenu() {
-  mobileMenuOpen.value = false
-  mobileCurrencyOpen.value = false
-  mobileLanguageOpen.value = false
+  mobileMenuOpen.value = false;
+  mobileCurrencyOpen.value = false;
+  mobileLanguageOpen.value = false;
 }
 
 // ==============================
@@ -379,18 +494,18 @@ function closeMobileMenu() {
 // 說明：改用 Nuxt i18n 原生 setLocale，不再使用 Google Translate Cookie / reload。
 // ==============================
 async function changeLanguage(languageCode: string) {
-  languageMenuOpen.value = false
-  mobileMenuOpen.value = false
+  languageMenuOpen.value = false;
+  mobileMenuOpen.value = false;
 
-  const previousUiLocale = uiLocale.value
-  uiLocale.value = languageCode
+  const previousUiLocale = uiLocale.value;
+  uiLocale.value = languageCode;
 
   try {
-    await setLocale(languageCode)
+    await setLocale(languageCode);
   } catch (error) {
     // i18n 切換失敗時回復原本 UI 語言，避免顯示狀態不一致。
-    uiLocale.value = previousUiLocale
-    throw error
+    uiLocale.value = previousUiLocale;
+    throw error;
   }
 }
 
@@ -398,70 +513,82 @@ async function changeLanguage(languageCode: string) {
 // 點擊外部關閉語言選單
 // ==============================
 function toggleAccountMenu() {
-  accountMenuOpen.value = !accountMenuOpen.value
-  if (accountMenuOpen.value) { languageMenuOpen.value = false; currencyMenuOpen.value = false }
+  accountMenuOpen.value = !accountMenuOpen.value;
+  if (accountMenuOpen.value) {
+    languageMenuOpen.value = false;
+    currencyMenuOpen.value = false;
+  }
 }
 
 function toggleLanguageMenu() {
-  languageMenuOpen.value = !languageMenuOpen.value
-  if (languageMenuOpen.value) { accountMenuOpen.value = false; currencyMenuOpen.value = false }
+  languageMenuOpen.value = !languageMenuOpen.value;
+  if (languageMenuOpen.value) {
+    accountMenuOpen.value = false;
+    currencyMenuOpen.value = false;
+  }
 }
 
 function toggleCurrencyMenu() {
-  currencyMenuOpen.value = !currencyMenuOpen.value
-  if (currencyMenuOpen.value) { accountMenuOpen.value = false; languageMenuOpen.value = false }
+  currencyMenuOpen.value = !currencyMenuOpen.value;
+  if (currencyMenuOpen.value) {
+    accountMenuOpen.value = false;
+    languageMenuOpen.value = false;
+  }
 }
 
 async function changeCurrency(code: any) {
-  currencyMenuOpen.value = false
-  const changed = await setCurrency(code)
+  currencyMenuOpen.value = false;
+  const changed = await setCurrency(code);
   if (!changed) {
-    await Swal.fire({ icon: 'error', title: '幣值切換失敗', text: '目前無法取得匯率，請稍後再試。', confirmButtonText: '確定' })
+    await Swal.fire({
+      icon: "error",
+      title: "幣值切換失敗",
+      text: "目前無法取得匯率，請稍後再試。",
+      confirmButtonText: "確定",
+    });
   }
 }
 
 function handleDocumentClick(event: MouseEvent) {
-  const target = event.target as Node
+  const target = event.target as Node;
 
   if (!languageMenuRef.value?.contains(target)) {
-    languageMenuOpen.value = false
+    languageMenuOpen.value = false;
   }
 
   if (!accountMenuRef.value?.contains(target)) {
-    accountMenuOpen.value = false
+    accountMenuOpen.value = false;
   }
 }
 
 function handleResize() {
   if (window.innerWidth >= 1180) {
-    mobileMenuOpen.value = false
+    mobileMenuOpen.value = false;
   }
 }
 
-
-
 onMounted(() => {
-  checkAuth()
-  document.addEventListener('click', handleDocumentClick)
-  window.addEventListener('resize', handleResize)
-})
+  checkAuth();
+  document.addEventListener("click", handleDocumentClick);
+  window.addEventListener("resize", handleResize);
+});
 
 onBeforeUnmount(() => {
-  document.removeEventListener('click', handleDocumentClick)
-  window.removeEventListener('resize', handleResize)
+  document.removeEventListener("click", handleDocumentClick);
+  window.removeEventListener("resize", handleResize);
 
   // 功能：離開頁面時保證解除手機選單的背景鎖定。
   if (import.meta.client) {
-    document.documentElement.style.scrollbarGutter = ''
-    document.documentElement.style.overflow = ''
-    document.body.style.position = ''
-    document.body.style.top = ''
-    document.body.style.left = ''
-    document.body.style.right = ''
-    document.body.style.width = ''
-    document.body.style.overflow = ''
+    document.documentElement.style.scrollbarGutter = "";
+    document.documentElement.style.overflow = "";
+    document.body.style.position = "";
+    document.body.style.top = "";
+    document.body.style.left = "";
+    document.body.style.right = "";
+    document.body.style.width = "";
+    document.body.style.overflow = "";
   }
-})
+});
 
 // ==============================
 // 行動版選單開啟時鎖住背景捲動
@@ -469,56 +596,59 @@ onBeforeUnmount(() => {
 // 這裡固定 body 並記住 scrollY，關閉後再回復原本位置。
 // ==============================
 function lockMobileMenuPageScroll() {
-  if (!import.meta.client) return
+  if (!import.meta.client) return;
 
-  mobileMenuScrollY = window.scrollY
+  mobileMenuScrollY = window.scrollY;
 
   // 功能：取消 scrollbar 預留空間，避免右側留下白邊。
-  document.documentElement.style.scrollbarGutter = 'auto'
-  document.documentElement.style.overflow = 'hidden'
+  document.documentElement.style.scrollbarGutter = "auto";
+  document.documentElement.style.overflow = "hidden";
 
   // 功能：固定背景頁面，漢堡選單開啟期間禁止頁面上下滑動。
-  document.body.style.position = 'fixed'
-  document.body.style.top = `-${mobileMenuScrollY}px`
-  document.body.style.left = '0'
-  document.body.style.right = '0'
-  document.body.style.width = '100%'
-  document.body.style.overflow = 'hidden'
+  document.body.style.position = "fixed";
+  document.body.style.top = `-${mobileMenuScrollY}px`;
+  document.body.style.left = "0";
+  document.body.style.right = "0";
+  document.body.style.width = "100%";
+  document.body.style.overflow = "hidden";
 }
 
 function unlockMobileMenuPageScroll() {
-  if (!import.meta.client) return
+  if (!import.meta.client) return;
 
   // 功能：恢復全站原本捲動設定與頁面位置。
-  document.documentElement.style.scrollbarGutter = ''
-  document.documentElement.style.overflow = ''
-  document.body.style.position = ''
-  document.body.style.top = ''
-  document.body.style.left = ''
-  document.body.style.right = ''
-  document.body.style.width = ''
-  document.body.style.overflow = ''
-  window.scrollTo(0, mobileMenuScrollY)
+  document.documentElement.style.scrollbarGutter = "";
+  document.documentElement.style.overflow = "";
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+  document.body.style.width = "";
+  document.body.style.overflow = "";
+  window.scrollTo(0, mobileMenuScrollY);
 }
 
 watch(mobileMenuOpen, (isOpen) => {
   if (isOpen) {
-    lockMobileMenuPageScroll()
-    return
+    lockMobileMenuPageScroll();
+    return;
   }
 
-  unlockMobileMenuPageScroll()
-})
+  unlockMobileMenuPageScroll();
+});
 
 // 切換路由時自動收起選單
-watch(() => route.fullPath, () => {
-  mobileMenuOpen.value = false
-  mobileCurrencyOpen.value = false
-  mobileLanguageOpen.value = false
-  languageMenuOpen.value = false
-  accountMenuOpen.value = false
-  checkAuth()
-})
+watch(
+  () => route.fullPath,
+  () => {
+    mobileMenuOpen.value = false;
+    mobileCurrencyOpen.value = false;
+    mobileLanguageOpen.value = false;
+    languageMenuOpen.value = false;
+    accountMenuOpen.value = false;
+    checkAuth();
+  },
+);
 </script>
 
 <style scoped>
@@ -619,7 +749,7 @@ watch(() => route.fullPath, () => {
   bottom: 26px;
   left: 0;
   height: 2px;
-  content: '';
+  content: "";
   background: #8f3b86;
   transform: scaleX(0);
   transform-origin: center;
@@ -637,13 +767,57 @@ watch(() => route.fullPath, () => {
 }
 
 /* 會員選單 */
-.account-placeholder { display:block; min-width:88px; }
-.account-placeholder{display:block;min-width:88px;}
-.account-menu { position: relative; display:flex; align-items:stretch; }
-.account-trigger { border:0; background:transparent; cursor:pointer; font-family:inherit; }
-.account-dropdown { position:absolute; top:calc(100% - 18px); right:0; z-index:5200; min-width:130px; padding:8px; background:#fff; border:1px solid #e3e4e7; border-radius:8px; box-shadow:0 14px 36px rgba(26,34,43,.14); }
-.account-dropdown a, .account-dropdown button { display:block; width:100%; padding:10px 12px; color:#263849; font:inherit; font-size:14px; text-align:left; text-decoration:none; cursor:pointer; background:transparent; border:0; border-radius:7px; }
-.account-dropdown a:hover, .account-dropdown button:hover { color:#762f71; background:#f7eff6; }
+.account-placeholder {
+  display: block;
+  min-width: 88px;
+}
+.account-placeholder {
+  display: block;
+  min-width: 88px;
+}
+.account-menu {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+}
+.account-trigger {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+.account-dropdown {
+  position: absolute;
+  top: calc(100% - 18px);
+  right: 0;
+  z-index: 5200;
+  min-width: 130px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #e3e4e7;
+  border-radius: 8px;
+  box-shadow: 0 14px 36px rgba(26, 34, 43, 0.14);
+}
+.account-dropdown a,
+.account-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  color: #263849;
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+}
+.account-dropdown a:hover,
+.account-dropdown button:hover {
+  color: #762f71;
+  background: #f7eff6;
+}
 
 /* 語言選擇器 */
 .language-menu {
@@ -666,7 +840,9 @@ watch(() => route.fullPath, () => {
   background: #fff;
   border: 1px solid #cfd2d6;
   border-radius: 8px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .language-trigger:hover,
@@ -744,7 +920,9 @@ watch(() => route.fullPath, () => {
   margin: 5px 0;
   background: #14283b;
   border-radius: 999px;
-  transition: transform 0.25s ease, opacity 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
 }
 
 .mobile-toggle.active span:nth-child(1) {
@@ -857,7 +1035,10 @@ watch(() => route.fullPath, () => {
     border-bottom: 1px solid #ececef;
     border-radius: 0;
     appearance: none;
-    transition: color .2s ease, background-color .2s ease, padding-left .2s ease;
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease,
+      padding-left 0.2s ease;
   }
 
   .mobile-nav .mobile-logout:hover,
@@ -963,7 +1144,9 @@ watch(() => route.fullPath, () => {
 /* 動畫 */
 .mobile-nav-enter-active,
 .mobile-nav-leave-active {
-  transition: opacity 0.22s ease, transform 0.22s ease;
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
 }
 
 .mobile-nav-enter-from,
@@ -992,7 +1175,6 @@ watch(() => route.fullPath, () => {
     transition-duration: 0.01ms !important;
   }
 }
-
 
 /* ============================================================
    FINAL OVERRIDE：所有語言共用同一套桌機 Header
@@ -1131,7 +1313,6 @@ watch(() => route.fullPath, () => {
   text-align: center !important;
 }
 
-
 /* ===== Header Dropdown：與觸發按鈕等寬並左緣對齊 ===== */
 .account-menu,
 .language-menu {
@@ -1162,27 +1343,155 @@ watch(() => route.fullPath, () => {
   white-space: nowrap;
 }
 
-
 /* 會員中心下拉選單：往上靠近觸發按鈕 */
 .account-dropdown {
   top: calc(100% + 4px) !important;
 }
-
 
 /* 會員中心下拉選單：幾乎貼齊觸發按鈕 */
 .account-dropdown {
   top: calc(100% + 1px) !important;
 }
 
-
 /* 會員中心下拉：貼近會員中心底線 */
 .account-dropdown {
   top: calc(100% - 18px) !important;
 }
 
-
 /* ===== 全站幣值選擇器 ===== */
-.currency-menu{position:relative;flex:0 0 auto}.currency-trigger{display:flex;align-items:center;gap:7px;min-width:112px;min-height:46px;padding:0 12px;color:#14283b;font:inherit;font-size:13px;font-weight:750;cursor:pointer;background:#fff;border:1px solid #cfd2d6;border-radius:8px}.currency-trigger:hover,.currency-trigger:focus-visible{border-color:#8f3b86;box-shadow:0 0 0 3px rgba(143,59,134,.09);outline:none}.currency-trigger .currency-symbol{color:#8f3b86;font-weight:850}.currency-trigger .chevron{width:15px;height:15px;margin-left:auto;fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.8}.currency-dropdown{position:absolute;z-index:5200;top:calc(100% + 10px);left:0;width:100%;min-width:112px;padding:8px;background:#fff;border:1px solid #e3e4e7;border-radius:8px;box-shadow:0 14px 36px rgba(26,34,43,.14);box-sizing:border-box}.currency-dropdown button{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;min-height:40px;padding:8px;color:#263849;font:inherit;font-size:13px;cursor:pointer;background:transparent;border:0;border-radius:7px}.currency-dropdown button:hover,.currency-dropdown button.selected{color:#762f71;background:#f7eff6}.currency-dropdown button span{min-width:25px;text-align:right;font-weight:800}.currency-dropdown button strong{min-width:34px;text-align:left;font-weight:750}.mobile-currency-section{margin-top:20px;padding-top:20px;border-top:1px solid #e8ecee}.mobile-currency-title{display:flex;align-items:center;gap:9px;margin-bottom:12px;color:#14283b;font-size:13px;font-weight:800}.mobile-currency-title .currency-symbol{color:#8f3b86;font-size:15px}.mobile-currency-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.mobile-currency-options button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:8px;border:1px solid #e2e7e9;border-radius:8px;background:#fff;color:#263849;font:inherit;font-size:13px;cursor:pointer}.mobile-currency-options button.selected{color:#762f71;border-color:#e3cfe0;background:#f7eff6}@media(max-width:1179px){.desktop-currency{display:none}}
+.currency-menu {
+  position: relative;
+  flex: 0 0 auto;
+}
+.currency-trigger {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 112px;
+  min-height: 46px;
+  padding: 0 12px;
+  color: #14283b;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 750;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #cfd2d6;
+  border-radius: 8px;
+}
+.currency-trigger:hover,
+.currency-trigger:focus-visible {
+  border-color: #8f3b86;
+  box-shadow: 0 0 0 3px rgba(143, 59, 134, 0.09);
+  outline: none;
+}
+.currency-trigger .currency-symbol {
+  color: #8f3b86;
+  font-weight: 850;
+}
+.currency-trigger .chevron {
+  width: 15px;
+  height: 15px;
+  margin-left: auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+.currency-dropdown {
+  position: absolute;
+  z-index: 5200;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 100%;
+  min-width: 112px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #e3e4e7;
+  border-radius: 8px;
+  box-shadow: 0 14px 36px rgba(26, 34, 43, 0.14);
+  box-sizing: border-box;
+}
+.currency-dropdown button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 40px;
+  padding: 8px;
+  color: #263849;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+}
+.currency-dropdown button:hover,
+.currency-dropdown button.selected {
+  color: #762f71;
+  background: #f7eff6;
+}
+.currency-dropdown button span {
+  min-width: 25px;
+  text-align: right;
+  font-weight: 800;
+}
+.currency-dropdown button strong {
+  min-width: 34px;
+  text-align: left;
+  font-weight: 750;
+}
+.mobile-currency-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e8ecee;
+}
+.mobile-currency-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 12px;
+  color: #14283b;
+  font-size: 13px;
+  font-weight: 800;
+}
+.mobile-currency-title .currency-symbol {
+  color: #8f3b86;
+  font-size: 15px;
+}
+.mobile-currency-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.mobile-currency-options button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 8px;
+  border: 1px solid #e2e7e9;
+  border-radius: 8px;
+  background: #fff;
+  color: #263849;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+.mobile-currency-options button.selected {
+  color: #762f71;
+  border-color: #e3cfe0;
+  background: #f7eff6;
+}
+@media (max-width: 1179px) {
+  .desktop-currency {
+    display: none;
+  }
+}
 
 /* 行動版幣值 / 語言折疊區 */
 @media (max-width: 1179px) {
@@ -1220,7 +1529,7 @@ watch(() => route.fullPath, () => {
     stroke-linecap: round;
     stroke-linejoin: round;
     stroke-width: 1.8;
-    transition: transform .2s ease;
+    transition: transform 0.2s ease;
   }
 
   .mobile-collapse-chevron.open {

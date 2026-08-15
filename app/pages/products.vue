@@ -159,30 +159,76 @@
           </article>
         </div>
 
-        <nav v-if="totalPages > 1" class="pagination">
-          <button
-            type="button"
-            :disabled="currentPage === 1"
-            @click="changePage(currentPage - 1)"
-          >
-            ‹
-          </button>
-          <button
-            v-for="page in visiblePages"
-            :key="page"
-            type="button"
-            :class="{ active: currentPage === page }"
-            @click="changePage(page)"
-          >
-            {{ page }}
-          </button>
-          <button
-            type="button"
-            :disabled="currentPage === totalPages"
-            @click="changePage(currentPage + 1)"
-          >
-            ›
-          </button>
+        <nav v-if="totalPages > 1" class="pagination" :aria-label="$ui('商品分頁')">
+          <!--
+            SEO 模式：沒有篩選條件時使用真正的 NuxtLink。
+            功能：SSR HTML 會產生 href="/products?page=2"，搜尋引擎可沿連結爬到後續頁面。
+          -->
+          <template v-if="!hasActiveFilters">
+            <NuxtLink
+              v-if="currentPage > 1"
+              class="pagination-control"
+              :to="getPaginationRoute(currentPage - 1)"
+              :aria-label="$ui('上一頁')"
+              @click="scrollProductsToTop"
+            >
+              ‹
+            </NuxtLink>
+            <span v-else class="pagination-control is-disabled" aria-hidden="true">‹</span>
+
+            <NuxtLink
+              v-for="page in visiblePages"
+              :key="`seo-page-${page}`"
+              class="pagination-control"
+              :class="{ active: currentPage === page }"
+              :to="getPaginationRoute(page)"
+              :aria-current="currentPage === page ? 'page' : undefined"
+              @click="scrollProductsToTop"
+            >
+              {{ page }}
+            </NuxtLink>
+
+            <NuxtLink
+              v-if="currentPage < totalPages"
+              class="pagination-control"
+              :to="getPaginationRoute(currentPage + 1)"
+              :aria-label="$ui('下一頁')"
+              @click="scrollProductsToTop"
+            >
+              ›
+            </NuxtLink>
+            <span v-else class="pagination-control is-disabled" aria-hidden="true">›</span>
+          </template>
+
+          <!-- 有搜尋 / 分類 / 庫存 / 排序條件時維持原本前端分頁，不建立重複 SEO URL。 -->
+          <template v-else>
+            <button
+              class="pagination-control"
+              type="button"
+              :disabled="currentPage === 1"
+              @click="changePage(currentPage - 1)"
+            >
+              ‹
+            </button>
+            <button
+              v-for="page in visiblePages"
+              :key="`filtered-page-${page}`"
+              class="pagination-control"
+              type="button"
+              :class="{ active: currentPage === page }"
+              @click="changePage(page)"
+            >
+              {{ page }}
+            </button>
+            <button
+              class="pagination-control"
+              type="button"
+              :disabled="currentPage === totalPages"
+              @click="changePage(currentPage + 1)"
+            >
+              ›
+            </button>
+          </template>
         </nav>
       </main>
     </section>
@@ -371,7 +417,8 @@ const { data: catalogData, pending: loading, error: catalogError } = await useAs
   "public-product-catalog",
   () => $fetch<CatalogResponse>("/api/catalog"),
   {
-    lazy: true,
+    server: true,
+    lazy: false,
     default: () => ({ categories: [], products: [] }),
   },
 );
@@ -405,7 +452,19 @@ const selectedCategory = ref(0);
 const searchKeyword = ref("");
 const stockFilter = ref<"all" | "inStock" | "outOfStock">("all");
 const sortBy = ref("sequence");
-const currentPage = ref(1);
+
+// ============================================================
+// SEO 分頁狀態
+// 功能：從網址 ?page=2 讀取頁碼，讓 SSR 在第一次回應時就直接輸出第 2 頁商品。
+//       不再只靠瀏覽器端按鈕改 currentPage，避免搜尋引擎永遠只看到第 1 頁。
+// ============================================================
+function parsePageQuery(value: unknown) {
+  const rawValue = Array.isArray(value) ? value[0] : value;
+  const parsed = Number.parseInt(String(rawValue ?? "1"), 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+}
+
+const currentPage = ref(parsePageQuery(route.query.page));
 const pageSize = 9;
 const selectedProduct = ref<ProductItem | null>(null);
 // 洽詢客服專用 Modal 狀態，不影響一般商品詳情或購物車。
@@ -425,6 +484,16 @@ let floatingCartRafId: number | null = null;
 // 控制同一商品加入購物車時不可重複送出，避免快速連點造成競態。
 const addingProductIds = ref<Set<number>>(new Set());
 const isFilterOpen = ref(false);
+
+// 功能：只有「全部商品 + 預設排序」的分頁需要建立可被搜尋引擎追蹤的獨立網址。
+// 搜尋、庫存與排序篩選仍維持前端互動，避免產生大量重複 SEO URL。
+const hasActiveFilters = computed(
+  () =>
+    selectedCategory.value !== 0 ||
+    searchKeyword.value.trim() !== "" ||
+    stockFilter.value !== "all" ||
+    sortBy.value !== "sequence",
+);
 
 const sortedCategories = computed(() => [
   { id: 0, name: "全部", sequence: 0 },
@@ -473,6 +542,13 @@ const filteredProducts = computed(() => {
 const totalPages = computed(() =>
   Math.max(1, Math.ceil(filteredProducts.value.length / pageSize)),
 );
+
+// 功能：避免使用者手動輸入不存在的頁碼，例如 ?page=999999。
+// SSR 階段資料已由 useAsyncData 載入，因此這裡可以直接把頁碼限制在有效範圍內。
+if (currentPage.value > totalPages.value) {
+  currentPage.value = totalPages.value;
+}
+
 const paginatedProducts = computed(() =>
   filteredProducts.value.slice(
     (currentPage.value - 1) * pageSize,
@@ -488,11 +564,31 @@ const visiblePages = computed(() => {
 });
 watch(
   [selectedCategory, searchKeyword, stockFilter, sortBy],
-  () => (currentPage.value = 1),
+  () => {
+    currentPage.value = 1;
+
+    // 功能：使用篩選器後移除 SEO 分頁參數，避免網址顯示 ?page=2，
+    // 但畫面其實已經是篩選結果第 1 頁，造成網址與內容不一致。
+    if (import.meta.client && route.query.page) {
+      const query = { ...route.query };
+      delete query.page;
+      void router.replace({ path: route.path, query });
+    }
+  },
 );
-watch(totalPages, (v) => {
-  if (currentPage.value > v) currentPage.value = v;
+
+watch(totalPages, (value) => {
+  if (currentPage.value > value) currentPage.value = value;
 });
+
+// 功能：瀏覽器上一頁 / 下一頁或直接切換 ?page= 時，同步目前顯示頁碼。
+watch(
+  () => route.query.page,
+  (pageQuery) => {
+    if (hasActiveFilters.value) return;
+    currentPage.value = Math.min(parsePageQuery(pageQuery), totalPages.value);
+  },
+);
 function selectCategory(id: number) {
   selectedCategory.value = selectedCategory.value === id ? 0 : id;
 }
@@ -504,16 +600,27 @@ function resetFilters() {
   currentPage.value = 1;
 }
 
-// 功能：切換商品分頁後回到頁面最上方，避免使用者停留在上一頁底部。
+// 功能：產生搜尋引擎可追蹤的商品分頁網址；第 1 頁維持乾淨的 /products。
+function getPaginationRoute(page: number) {
+  return page <= 1
+    ? { path: "/products" }
+    : { path: "/products", query: { page: String(page) } };
+}
+
+function scrollProductsToTop() {
+  if (import.meta.client) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+// 功能：有篩選條件時仍採原本前端分頁，不建立可索引 URL；
+// 無篩選時改由 NuxtLink 處理 ?page=，此方法主要服務篩選後的分頁按鈕。
 async function changePage(page: number) {
   if (page < 1 || page > totalPages.value || page === currentPage.value) return;
 
   currentPage.value = page;
   await nextTick();
-
-  if (import.meta.client) {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  scrollProductsToTop();
 }
 function getCategoryName(id: number) {
   return categories.value.find((x) => x.id === id)?.name ?? "其他產品";
@@ -799,9 +906,65 @@ watch(
   { immediate: true },
 );
 
+// ============================================================
+// 商品分頁 SEO
+// 功能：每個可索引分頁都有自己的 title / description，並輸出 prev / next 關係。
+//       /products?page=2 的 SSR HTML 會直接包含第 2 頁商品與對應 SEO 資訊。
+// ============================================================
+const seoPageTitle = computed(() =>
+  currentPage.value > 1
+    ? `商品專區第 ${currentPage.value} 頁｜祐強醫療儀器有限公司`
+    : "商品專區｜祐強醫療儀器有限公司",
+);
+
+const seoPageDescription = computed(() => {
+  const productNames = paginatedProducts.value
+    .slice(0, 4)
+    .map((product) => product.name)
+    .filter(Boolean)
+    .join("、");
+
+  if (currentPage.value <= 1) {
+    return "瀏覽祐強醫療儀器有限公司提供的醫療與寵物照護相關產品。";
+  }
+
+  return productNames
+    ? `瀏覽祐強醫療商品專區第 ${currentPage.value} 頁，包含${productNames}等醫療與寵物照護相關產品。`
+    : `瀏覽祐強醫療商品專區第 ${currentPage.value} 頁的醫療與寵物照護相關產品。`;
+});
+
 useSeoMeta({
-  title: "商品專區｜祐強醫療儀器有限公司",
-  description: "瀏覽祐強醫療儀器有限公司提供的醫療與寵物照護相關產品。",
+  title: () => seoPageTitle.value,
+  description: () => seoPageDescription.value,
+  ogTitle: () => seoPageTitle.value,
+  ogDescription: () => seoPageDescription.value,
+});
+
+useHead(() => {
+  // 功能：只替沒有前端篩選條件的正式商品分頁建立 prev / next。
+  // canonical 由目前已安裝的 Nuxt SEO 模組依實際網址自動輸出，?page=2 會自我 canonical。
+  if (hasActiveFilters.value) return {};
+
+  const links: Array<{ rel: "prev" | "next"; href: string }> = [];
+
+  if (currentPage.value > 1) {
+    links.push({
+      rel: "prev",
+      href:
+        currentPage.value === 2
+          ? "/products"
+          : `/products?page=${currentPage.value - 1}`,
+    });
+  }
+
+  if (currentPage.value < totalPages.value) {
+    links.push({
+      rel: "next",
+      href: `/products?page=${currentPage.value + 1}`,
+    });
+  }
+
+  return { link: links };
 });
 onBeforeUnmount(() => {
   // 功能：離開商品頁時移除浮動購物車監聽，避免切換頁面後殘留事件。
@@ -1083,22 +1246,30 @@ onMounted(async () => {
   justify-content: center;
   gap: 8px;
 }
-.pagination button {
+.pagination .pagination-control {
+  display: grid;
   width: 34px;
   height: 34px;
+  place-items: center;
+  padding: 0;
   cursor: pointer;
   color: #586b75;
   background: #fff;
   border: 1px solid #e1e6e7;
   border-radius: 6px;
+  text-decoration: none;
+  font: inherit;
 }
-.pagination button.active {
+.pagination .pagination-control.active {
   color: #fff;
   background: var(--purple);
   border-color: var(--purple);
 }
-.pagination button:disabled {
+.pagination .pagination-control:disabled,
+.pagination .pagination-control.is-disabled {
   opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
 }
 .state-box {
   display: grid;
@@ -1807,7 +1978,7 @@ onMounted(async () => {
 .products-page .stock-badge {
   font-size: 12px !important;
 }
-.products-page .pagination button {
+.products-page .pagination .pagination-control {
   font-size: 13px !important;
 }
 .products-page .modal-copy > span {

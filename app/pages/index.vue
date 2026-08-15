@@ -419,8 +419,6 @@ useHead({
   ],
 });
 
-const api = useApi();
-
 interface CarouselSlide {
   image: string;
   mobileImage: string;
@@ -460,6 +458,15 @@ interface FeaturedProduct {
   image: string;
   shortDescription: string;
   category: string;
+}
+
+interface HomeResponse {
+  categories: ApiCategory[];
+  topProducts: ApiTopProduct[];
+  errors: {
+    categories: boolean;
+    topProducts: boolean;
+  };
 }
 
 const carouselSlides: CarouselSlide[] = [
@@ -563,16 +570,63 @@ const showNewsViewModal = ref(true);
 const newsModalScrollY = ref(0);
 const currentSlide = ref(0);
 const productCurrentSlide = ref(0);
-const featuredProducts = ref<FeaturedProduct[]>([]);
-const loadingProducts = ref(true);
-const errorLoadingProducts = ref(false);
 const isMobile = ref(false);
 const currentTestimonial = ref(0);
 
-// 新版設計需要的分類資料，但 endpoint 與轉換邏輯沿用舊 ProductsPage。
-const categories = ref<CategoryItem[]>([]);
-const loadingCategories = ref(true);
-const errorLoadingCategories = ref(false);
+// ============================================================
+// 首頁 SEO 重要資料：SSR 階段完成熱門商品與分類載入
+// 功能：server=true + lazy=false，初次請求會等資料完成後再輸出 HTML。
+//       Nuxt 會把結果寫入 payload，Hydration 時不需要瀏覽器再抓一次。
+// ============================================================
+const {
+  data: homeData,
+  pending: loadingHomeData,
+  error: homeDataError,
+} = await useAsyncData<HomeResponse>(
+  "public-home-seo-data",
+  () => $fetch<HomeResponse>("/api/home"),
+  {
+    server: true,
+    lazy: false,
+    default: () => ({
+      categories: [],
+      topProducts: [],
+      errors: { categories: false, topProducts: false },
+    }),
+  },
+);
+
+// 功能：API DTO 轉成首頁 UI 使用格式；computed 可直接參與 SSR render。
+const featuredProducts = computed<FeaturedProduct[]>(() =>
+  (homeData.value?.topProducts ?? [])
+    .filter((item) => item.Id !== 50)
+    .map((item) => ({
+      id: item.Id,
+      name: item.Name,
+      image: item.ImageUrl,
+      shortDescription: item.Description,
+      category: item.Category,
+    })),
+);
+
+const categories = computed<CategoryItem[]>(() =>
+  (homeData.value?.categories ?? []).map((item) => ({
+    id: item.Id,
+    name: item.Name,
+    sequence: item.Sequence,
+    createdDate: item.CreatedDate,
+    updatedDate: item.UpdatedDate,
+  })),
+);
+
+const loadingProducts = computed(() => loadingHomeData.value);
+const loadingCategories = computed(() => loadingHomeData.value);
+const errorLoadingProducts = computed(
+  () => Boolean(homeDataError.value) || Boolean(homeData.value?.errors.topProducts),
+);
+const errorLoadingCategories = computed(
+  () => Boolean(homeDataError.value) || Boolean(homeData.value?.errors.categories),
+);
 
 // ============================================================
 // 產品分類水平滑動狀態
@@ -683,27 +737,6 @@ function closeNewsViewModal() {
 }
 
 
-async function fetchTopProducts() {
-  try {
-    const res = await api.get<ApiTopProduct[]>("/products/top");
-
-    featuredProducts.value = res.data
-      .filter((item) => item.Id !== 50)
-      .map((item) => ({
-        id: item.Id,
-        name: item.Name,
-        image: item.ImageUrl,
-        shortDescription: item.Description,
-        category: item.Category,
-      }));
-  } catch (error) {
-    console.error("載入熱門產品失敗", error);
-    errorLoadingProducts.value = true;
-  } finally {
-    loadingProducts.value = false;
-  }
-}
-
 function updateCategoryScrollState() {
   const scroller = categoryScroller.value;
 
@@ -732,29 +765,6 @@ function scrollCategories(direction: "left" | "right") {
     left: direction === "right" ? distance : -distance,
     behavior: "smooth",
   });
-}
-
-async function fetchCategories() {
-  try {
-    loadingCategories.value = true;
-    const res = await api.get<ApiCategory[]>("/categories?");
-
-    categories.value = res.data.map((item) => ({
-      id: item.Id,
-      name: item.Name,
-      sequence: item.Sequence,
-      createdDate: item.CreatedDate,
-      updatedDate: item.UpdatedDate,
-    }));
-
-    await nextTick();
-    updateCategoryScrollState();
-  } catch (error) {
-    console.error("載入分類失敗", error);
-    errorLoadingCategories.value = true;
-  } finally {
-    loadingCategories.value = false;
-  }
 }
 
 function startCarousel() {
@@ -818,8 +828,9 @@ onMounted(() => {
   startCarousel();
   startTestimonialSlider();
   startProductCarousel();
-  fetchTopProducts();
-  fetchCategories();
+
+  // 功能：分類資料已由 SSR 準備完成，mounted 後只計算實際 DOM 是否需要左右滑動。
+  nextTick(updateCategoryScrollState);
 });
 
 onBeforeUnmount(() => {

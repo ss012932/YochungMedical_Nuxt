@@ -1026,4 +1026,96 @@ async function goTo(path: string) {
   width: 100%;
   max-width: none;
 }
+
+
+/* ============================================================
+   404 中小尺寸最終版型
+   功能：1080px 以下隱藏右側醫療視覺，主內容固定置中，兩個操作按鈕保持左右排列。
+============================================================ */
+@media (max-width: 1080px) {
+  .error-page {
+    min-height: 100dvh;
+    overflow-y: auto;
+  }
+
+  .error-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: none;
+    min-height: 100dvh;
+    height: auto;
+    margin: 0;
+    padding: clamp(28px, 5vw, 52px) clamp(18px, 5vw, 42px);
+    place-items: center;
+  }
+
+  /* 功能：中小尺寸只保留 404 主要資訊，右側醫療卡與裝飾視覺全部隱藏。 */
+  .error-visual,
+  .medical-card {
+    display: none !important;
+  }
+
+  /* 功能：404 主內容在整個 viewport 水平、垂直正中央。 */
+  .error-copy {
+    display: flex;
+    width: min(100%, 680px);
+    max-width: 680px;
+    min-width: 0;
+    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .error-code-404 {
+    justify-content: center;
+  }
+
+  .error-description {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  /* 功能：中小尺寸兩個主要按鈕固定左右並排，不切成上下排列。 */
+  .error-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: min(100%, 430px);
+    margin: clamp(22px, 3vh, 30px) auto 0;
+  }
+
+  .error-button {
+    width: 100%;
+    min-width: 0;
+    padding-inline: clamp(12px, 2.5vw, 20px);
+    white-space: normal;
+  }
+}
+
+@media (max-width: 520px) {
+  /* 功能：手機仍維持雙欄按鈕，只縮小間距與字級避免文字互相擠壓。 */
+  .error-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(100%, 360px);
+    gap: 8px;
+  }
+
+  .error-button {
+    min-height: 46px;
+    padding-inline: 10px;
+    gap: 6px;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .error-button svg {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+  }
+}
+
 </style>

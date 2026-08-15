@@ -986,4 +986,111 @@ export default {
   }
 }
 
+
+
+/* ============================================================
+   寬版手機推薦商品 Modal 防重疊
+   功能：手機改用明確的直向 flex 版面，圖片區固定為獨立區塊，
+   避免商品文字因可視高度不足而覆蓋圖片；同時增加底部安全留白。
+============================================================ */
+@media (max-width: 640px) {
+  .modal-overlay {
+    padding: 10px !important;
+  }
+
+  .modal-content {
+    max-height: calc(100dvh - 20px) !important;
+  }
+
+  .product-detail {
+    display: flex !important;
+    min-height: 0 !important;
+    padding: 16px 18px 30px !important;
+    flex: 1 1 auto !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 20px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scroll-padding-bottom: 30px;
+  }
+
+  /* 功能：圖片框不參與壓縮，避免後方文字往上蓋到圖片。 */
+  .product-image-container {
+    position: relative !important;
+    display: flex !important;
+    width: 100% !important;
+    height: clamp(200px, 52vw, 235px) !important;
+    min-height: clamp(200px, 52vw, 235px) !important;
+    margin: 0 !important;
+    padding: 12px !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    border-radius: 14px !important;
+  }
+
+  .product-image {
+    position: static !important;
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    margin: 0 auto !important;
+    flex: 0 0 auto !important;
+    object-fit: contain !important;
+    transform: none !important;
+  }
+
+  /* 功能：文字資訊成為圖片下方獨立區塊，不允許負 margin 或 flex 壓縮造成重疊。 */
+  .product-info {
+    position: relative !important;
+    z-index: 1 !important;
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    background: #fff !important;
+  }
+
+  .product-recommend-label {
+    margin: 0 0 7px !important;
+  }
+
+  .product-name {
+    margin: 0 0 12px !important;
+    font-size: clamp(24px, 6.4vw, 28px) !important;
+    line-height: 1.2 !important;
+  }
+
+  .product-description {
+    margin: 0 0 18px !important;
+  }
+
+  .features-title {
+    margin: 0 0 12px !important;
+  }
+
+  .features-list {
+    margin-bottom: 0 !important;
+  }
+
+  .product-actions {
+    width: 100% !important;
+    margin: 22px 0 0 !important;
+    padding: 0 0 4px !important;
+    flex: 0 0 auto !important;
+  }
+
+  .btn-secondary {
+    width: 100% !important;
+    min-height: 46px !important;
+  }
+}
 </style>

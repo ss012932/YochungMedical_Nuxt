@@ -25,7 +25,10 @@
               </button>
             </div>
 
-            <!-- 產品內容區域 -->
+            <!--
+              產品內容區域：畫面只渲染目前選中的商品，維持原本 Modal 高度與排版。
+              SEO 的完整推薦商品資料改由 JSON-LD 輸出，不再把兩個商品同時塞進可視 DOM。
+            -->
             <div class="product-detail">
               <div class="product-image-container">
                 <img
@@ -46,8 +49,8 @@
                 <h4 class="features-title">{{ $ui('主要特點：') }}</h4>
                 <ul class="features-list">
                   <li
-                    v-for="(feature, i) in products[activeTab].features"
-                    :key="i"
+                    v-for="(feature, featureIndex) in products[activeTab].features"
+                    :key="`${products[activeTab].id}-feature-${featureIndex}`"
                     class="feature-item"
                   >
                     <span class="feature-icon">✓</span>
@@ -108,6 +111,41 @@
 <script>
 import board798Image from "@/assets/image/Board798.webp";
 import board799Image from "@/assets/image/Board799.webp";
+
+// ============================================================
+// 首頁推薦商品資料
+// 功能：畫面與 SEO JSON-LD 共用同一份資料，避免日後兩邊內容不同步。
+// ============================================================
+const recommendedProducts = [
+  {
+    id: 1,
+    name: "PGS-798 德國電刀",
+    imageUrl: board798Image,
+    description: "多功能整合設計，搭配高安全性與操作效率。",
+    features: [
+      "電壓全球通用。",
+      "安全警示與保護。",
+      "多功能應用設計。",
+      "高效率操作介面。",
+      "智能電壓調整系統。",
+      "音效與安全提醒設計。",
+    ],
+  },
+  {
+    id: 2,
+    name: "PGS-799 德國氬氣刀",
+    imageUrl: board799Image,
+    description: "高效能氬氣系統，支援精準手術操作。",
+    features: [
+      "應用領域廣泛。",
+      "高解析觸控螢幕。",
+      "自動切換氣瓶機制。",
+      "異常保護與警示功能。",
+      "非接觸式氬氣止血設計。",
+    ],
+  },
+];
+
 export default {
   name: "RecommendedProductsModal",
   props: {
@@ -115,6 +153,46 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  setup() {
+    // ============================================================
+    // SEO：首頁推薦商品結構化資料
+    // 功能：兩筆推薦商品都輸出到 SSR <head> 的 JSON-LD，
+    //       不需要為了 SEO 同時顯示兩份 Modal 內容，因此不會破壞原本版型。
+    // ============================================================
+    const requestUrl = useRequestURL();
+    const origin = requestUrl.origin;
+
+    useHead({
+      script: [
+        {
+          key: "home-recommended-products-jsonld",
+          type: "application/ld+json",
+          innerHTML: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            name: "首頁推薦商品",
+            itemListElement: recommendedProducts.map((product, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              item: {
+                "@type": "Product",
+                name: product.name,
+                description: product.description,
+                image: new URL(product.imageUrl, origin).href,
+                additionalProperty: product.features.map((feature) => ({
+                  "@type": "PropertyValue",
+                  name: "主要特點",
+                  value: feature,
+                })),
+              },
+            })),
+          }),
+        },
+      ],
+    });
+
+    return {};
   },
   data() {
     return {
@@ -129,35 +207,8 @@ export default {
       inquiryVisible: false,
       lightboxVisible: false,
       lightboxImage: "",
-      products: [
-        {
-          id: 1,
-          name: "PGS-798 德國電刀",
-          imageUrl: board798Image,
-          description: "多功能整合設計，搭配高安全性與操作效率。",
-          features: [
-            "電壓全球通用。",
-            "安全警示與保護。",
-            "多功能應用設計。",
-            "高效率操作介面。",
-            "智能電壓調整系統。",
-            "音效與安全提醒設計。",
-          ],
-        },
-        {
-          id: 2,
-          name: "PGS-799 德國氬氣刀",
-          imageUrl: board799Image,
-          description: "高效能氬氣系統，支援精準手術操作。",
-          features: [
-            "應用領域廣泛。",
-            "高解析觸控螢幕。",
-            "自動切換氣瓶機制。",
-            "異常保護與警示功能。",
-            "非接觸式氬氣止血設計。",
-          ],
-        },
-      ],
+      // 功能：UI 直接使用與 JSON-LD 相同的推薦商品資料。
+      products: recommendedProducts,
     };
   },
   computed: {

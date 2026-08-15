@@ -1,5 +1,8 @@
 <template>
-  <div class="admin-layout">
+  <div
+    class="admin-layout"
+    :class="{ 'products-admin-layout': $route.path === '/admin/products' }"
+  >
     <aside class="admin-sidebar">
       <div class="sidebar-header">
         <h2 class="system-title">後台管理</h2>
@@ -306,6 +309,10 @@ export default {
   
   .admin-content {
     flex: 1;
+    min-width: 0;
+    padding: 24px;
+    background: #f5f7fa;
+    box-sizing: border-box;
   }
   
   .content-header {
@@ -346,18 +353,89 @@ export default {
     color: #2c5282;
   }
   
+  /*
+    功能：Layout 只提供後台頁面的統一留白，不再額外包一張大白色卡片。
+    真正需要白底、圓角、陰影的區域由各頁自己的表格/卡片控制。
+  */
   .content-wrapper {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    padding: 24px;
-    min-height: 100vh;
+    width: 100%;
+    min-width: 0;
+    min-height: calc(100vh - 48px);
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+    box-sizing: border-box;
+  }
+
+  /*
+    功能：orders/products 原本自己又加了一層外距；
+    由 admin layout 統一提供 24px 後，移除重複 padding，讓四個後台頁面對齊。
+  */
+  .content-wrapper :deep(.orders-page),
+  .content-wrapper :deep(.products-page) {
+    padding: 0 !important;
+  }
+
+  /* 功能：所有後台頁面的根節點都填滿可用內容寬度，不額外形成置中的容器。 */
+  .content-wrapper :deep(.dashboard),
+  .content-wrapper :deep(.orders-page),
+  .content-wrapper :deep(.products-page),
+  .content-wrapper :deep(.users-page) {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    box-sizing: border-box;
   }
   
+  /* ============================================================
+     商品管理頁捲動規則
+     功能：商品管理時鎖住整個後台 Layout，只讓右側內容區上下捲動。
+     左側 Sidebar 保持在視窗內，不會跟著商品列表上下移動。
+  ============================================================ */
+  .admin-layout.products-admin-layout {
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  .products-admin-layout .admin-sidebar {
+    height: 100vh;
+    flex: 0 0 260px;
+    overflow: hidden;
+  }
+
+  .products-admin-layout .admin-content {
+    height: 100vh;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-gutter: stable;
+  }
+
+  .products-admin-layout .content-wrapper {
+    min-height: auto;
+  }
+
   @media screen and (max-width: 768px) {
+    .admin-content {
+      padding: 16px;
+    }
+
+    .content-wrapper {
+      min-height: calc(100vh - 32px);
+    }
+
     .admin-sidebar {
       width: 80px;
       overflow-x: hidden;
+    }
+
+    /* 功能：小螢幕若側欄內容超過視窗，保留側欄自身的可操作性。 */
+    .products-admin-layout .admin-sidebar {
+      flex-basis: 80px;
+      overflow-y: auto;
     }
     
     .admin-sidebar:hover {

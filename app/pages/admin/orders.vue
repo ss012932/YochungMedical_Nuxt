@@ -479,7 +479,7 @@ export default {
       startDate: "",
       endDate: "",
       currentPage: 1,
-      itemsPerPage: 6, // 確保每頁顯示至少10筆資料
+      itemsPerPage: 8, // 確保每頁顯示至少10筆資料
       sortField: "date",
       sortDirection: "desc",
       showOrderModal: false,

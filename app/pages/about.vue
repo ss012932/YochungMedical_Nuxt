@@ -10,9 +10,19 @@
       </div>
       <div class="about-hero-overlay" aria-hidden="true"></div>
       <div class="about-hero-copy">
-        <span class="about-kicker">{{ $ui('關於祐強') }}</span>
-        <h1>{{ $ui('專業醫療設備') }}<br />{{ $ui('與寵物照護的可靠夥伴') }}</h1>
-        <p>{{ $ui('祐強醫療儀器有限公司致力於寵物醫院、醫療設備推廣應用，寵物傷口照護及寵物天然保健食品') }}<br />{{ $ui('平台上已經累積與獸醫師在臨床使用上有非常顯著的效果與經驗。') }}</p>
+        <span class="about-kicker">{{ $ui("關於祐強") }}</span>
+        <h1>
+          {{ $ui("專業醫療設備") }}<br />{{ $ui("與寵物照護的可靠夥伴") }}
+        </h1>
+        <p>
+          {{
+            $ui(
+              "祐強醫療儀器有限公司致力於寵物醫院、醫療設備推廣應用，寵物傷口照護及寵物天然保健食品",
+            )
+          }}<br />{{
+            $ui("平台上已經累積與獸醫師在臨床使用上有非常顯著的效果與經驗。")
+          }}
+        </p>
       </div>
     </section>
 
@@ -23,7 +33,7 @@
     <section class="mission-section">
       <div class="mission-container">
         <div class="mission-heading">
-          <h2>{{ $ui('我們的理念') }}</h2>
+          <h2>{{ $ui("我們的理念") }}</h2>
           <span aria-hidden="true"></span>
         </div>
 
@@ -92,12 +102,30 @@
 
         <div class="company-profile-copy">
           <div class="company-profile-heading">
-            <h2>{{ $ui('關於祐強醫療') }}</h2>
+            <h2>{{ $ui("關於祐強醫療") }}</h2>
             <span aria-hidden="true"></span>
           </div>
-          <p>{{ $ui('祐強醫療儀器有限公司致力於寵物醫院、醫療設備推廣應用，並提供寵物傷口照護及寵物天然保健食品等專業產品與服務。') }}</p>
-          <p>{{ $ui('我們長期累積與獸醫師臨床合作的實際經驗，重視產品品質、專業應用與完善服務，協助醫療單位找到合適的解決方案。') }}</p>
-          <p>{{ $ui('秉持「竭盡所能、盡心服務」的理念，祐強持續以專業、可靠的服務，與醫師及醫療機構共同提升照護品質。') }}</p>
+          <p>
+            {{
+              $ui(
+                "祐強醫療儀器有限公司致力於寵物醫院、醫療設備推廣應用，並提供寵物傷口照護及寵物天然保健食品等專業產品與服務。",
+              )
+            }}
+          </p>
+          <p>
+            {{
+              $ui(
+                "我們長期累積與獸醫師臨床合作的實際經驗，重視產品品質、專業應用與完善服務，協助醫療單位找到合適的解決方案。",
+              )
+            }}
+          </p>
+          <p>
+            {{
+              $ui(
+                "秉持「竭盡所能、盡心服務」的理念，祐強持續以專業、可靠的服務，與醫師及醫療機構共同提升照護品質。",
+              )
+            }}
+          </p>
         </div>
       </div>
     </section>
@@ -106,7 +134,7 @@
     <section class="recommendation-section">
       <div class="about-content-container">
         <div class="section-title-row">
-          <h2>{{ $ui('醫師使用器材推薦') }}</h2>
+          <h2>{{ $ui("醫師使用器材推薦") }}</h2>
           <span class="section-title-line" aria-hidden="true"></span>
         </div>
 
@@ -136,16 +164,20 @@
             <div class="recommendation-copy">
               <div class="recommendation-head">
                 <div>
-                  <span class="recommendation-label">{{ $ui(item.isMock ? '示意資料' : '推薦器材') }}</span>
+                  <span class="recommendation-label">{{
+                    $ui(item.isMock ? "示意資料" : "推薦器材")
+                  }}</span>
                   <h3>{{ $ui(item.product) }}</h3>
                 </div>
                 <span class="recommendation-quote" aria-hidden="true">“</span>
               </div>
 
-              <p class="recommendation-description">{{ $ui(item.description) }}</p>
+              <p class="recommendation-description">
+                {{ $ui(item.description) }}
+              </p>
 
               <div class="recommendation-hospitals">
-                <span class="hospital-label">{{ $ui('使用醫院') }}</span>
+                <span class="hospital-label">{{ $ui("使用醫院") }}</span>
                 <div class="hospital-tags">
                   <span
                     v-for="hospital in item.hospitals.slice(0, 2)"
@@ -158,7 +190,12 @@
                     v-if="item.hospitals.length > 2"
                     class="hospital-more-badge"
                   >
-                    {{ $ui('+{count} 家醫院').replace('{count}', String(item.hospitals.length - 2)) }}
+                    {{
+                      $ui("+{count} 家醫院").replace(
+                        "{count}",
+                        String(item.hospitals.length - 2),
+                      )
+                    }}
                   </span>
                 </div>
               </div>
@@ -172,16 +209,13 @@
             class="btn-view-more"
             @click="showAllRecommendations"
           >
-            <span>{{ $ui('查看更多醫院使用器材') }}</span>
+            <span>{{ $ui("查看更多醫院使用器材") }}</span>
             <span aria-hidden="true">→</span>
           </button>
         </div>
       </div>
 
-      <div
-        v-if="modalVisible"
-        class="recommendation-modal"
-      >
+      <div v-if="modalVisible" class="recommendation-modal">
         <div
           class="recommendation-modal-panel"
           role="dialog"
@@ -190,9 +224,11 @@
         >
           <header class="recommendation-modal-header">
             <div class="modal-title-block">
-              <span class="modal-eyebrow">{{ $ui('醫療單位使用資訊') }}</span>
-              <h2 id="recommendation-modal-title">{{ $ui('醫師使用器材推薦') }}</h2>
-              <p>{{ $ui('依地區查看器材與合作使用單位') }}</p>
+              <span class="modal-eyebrow">{{ $ui("醫療單位使用資訊") }}</span>
+              <h2 id="recommendation-modal-title">
+                {{ $ui("醫師使用器材推薦") }}
+              </h2>
+              <p>{{ $ui("依地區查看器材與合作使用單位") }}</p>
             </div>
             <button
               type="button"
@@ -204,7 +240,8 @@
             </button>
           </header>
 
-          <div class="region-tabs" role="tablist" :aria-label="$ui('地區切換')">
+          <!-- 地區篩選 -->
+          <!-- <div class="region-tabs" role="tablist" :aria-label="$ui('地區切換')">
             <button
               v-for="region in recommendationRegions"
               :key="region.key"
@@ -216,7 +253,7 @@
               <span>{{ $ui(region.label) }}</span>
               <strong>{{ region.count }}</strong>
             </button>
-          </div>
+          </div> -->
 
           <main class="recommendation-modal-content">
             <div class="region-overview">
@@ -253,7 +290,7 @@
 
                 <div class="product-hospitals">
                   <div class="product-hospitals-heading">
-                    <span>{{ $ui('使用單位') }}</span>
+                    <span>{{ $ui("使用單位") }}</span>
                   </div>
                   <div class="hospital-chip-list">
                     <span
@@ -277,7 +314,7 @@
     <section class="partners-section">
       <div class="about-content-container">
         <div class="section-title-row">
-          <h2>{{ $ui('專業合作品牌') }}</h2>
+          <h2>{{ $ui("專業合作品牌") }}</h2>
           <span class="section-title-line" aria-hidden="true"></span>
         </div>
         <div class="partners-grid">
@@ -363,18 +400,6 @@ const featuredRecommendations = [
     ],
     isMock: false,
   },
-  {
-    id: 3,
-    product: "舒派特敷料",
-    description: "示意資料：適用於術後照護與一般傷口覆蓋，方便臨床搭配使用。",
-    hospitals: [
-      "台中示意動物醫院",
-      "高雄示意動物醫院",
-      "新竹示意動物醫院",
-      "台南示意動物醫院",
-    ],
-    isMock: true,
-  },
 ];
 
 const regionalRecommendationData = [
@@ -413,12 +438,7 @@ const regionalRecommendationData = [
       {
         product: "舒派特系列",
         description: "示意區域資料，待正式 hospitalData 後替換。",
-        hospitals: ["九九峰", "台中示意動物醫院"],
-      },
-      {
-        product: "舒派特敷料",
-        description: "示意資料：適用於術後照護與一般傷口覆蓋。",
-        hospitals: ["彰化示意動物醫院", "苗栗示意動物醫院"],
+        hospitals: ["九九峰"],
       },
     ],
   },
@@ -426,18 +446,7 @@ const regionalRecommendationData = [
     key: "south" as const,
     label: "南部",
     title: "南部使用單位",
-    groups: [
-      {
-        product: "舒派特凝膠",
-        description: "示意區域資料，待正式 hospitalData 後替換。",
-        hospitals: ["高雄示意動物醫院", "台南示意動物醫院"],
-      },
-      {
-        product: "舒派特敷料",
-        description: "示意資料：適用於術後照護與一般傷口覆蓋。",
-        hospitals: ["屏東示意動物醫院"],
-      },
-    ],
+    groups: [],
   },
 ] as const;
 
@@ -1451,7 +1460,7 @@ onBeforeUnmount(() => {
 }
 
 .recommendation-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px;
   width: min(100%, 1320px);
   margin: 0 auto;
@@ -2694,11 +2703,12 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-
 /* ===== About Fluid RWD Final Override ===== */
 /* 功能：僅調整 1179px 以下，1180px 以上維持目前桌機版。 */
 @media (max-width: 1179px) {
-  .about-page { overflow-x: hidden; }
+  .about-page {
+    overflow-x: hidden;
+  }
 
   .about-hero {
     height: clamp(420px, 46vw, 500px);
@@ -2707,11 +2717,8 @@ onBeforeUnmount(() => {
 
   .about-hero-copy {
     width: min(62vw, 760px);
-    padding:
-      clamp(46px, 5vw, 64px)
-      clamp(24px, 3vw, 36px)
-      clamp(42px, 4vw, 56px)
-      clamp(42px, 6vw, 72px);
+    padding: clamp(46px, 5vw, 64px) clamp(24px, 3vw, 36px)
+      clamp(42px, 4vw, 56px) clamp(42px, 6vw, 72px);
   }
 
   .about-hero h1 {
@@ -2725,7 +2732,8 @@ onBeforeUnmount(() => {
   }
 
   .mission-section {
-    padding: clamp(46px, 5vw, 58px) clamp(24px, 4vw, 40px) clamp(52px, 5vw, 64px);
+    padding: clamp(46px, 5vw, 58px) clamp(24px, 4vw, 40px)
+      clamp(52px, 5vw, 64px);
   }
 
   .mission-item {
@@ -2733,11 +2741,12 @@ onBeforeUnmount(() => {
   }
 
   .company-profile-section {
-    padding: clamp(48px, 5vw, 62px) clamp(24px, 4vw, 40px) clamp(54px, 5vw, 68px);
+    padding: clamp(48px, 5vw, 62px) clamp(24px, 4vw, 40px)
+      clamp(54px, 5vw, 68px);
   }
 
   .company-profile-container {
-    grid-template-columns: minmax(300px, .95fr) minmax(0, 1.05fr);
+    grid-template-columns: minmax(300px, 0.95fr) minmax(0, 1.05fr);
     gap: clamp(36px, 5vw, 62px);
   }
 
@@ -2760,8 +2769,12 @@ onBeforeUnmount(() => {
     min-height: 202px;
   }
 
-  .recommendation-visual { min-height: 202px; }
-  .recommendation-copy { padding: clamp(18px, 2vw, 22px); }
+  .recommendation-visual {
+    min-height: 202px;
+  }
+  .recommendation-copy {
+    padding: clamp(18px, 2vw, 22px);
+  }
 
   .partners-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2791,12 +2804,15 @@ onBeforeUnmount(() => {
     object-position: center;
   }
 
-  .about-hero-overlay { display: none; }
+  .about-hero-overlay {
+    display: none;
+  }
 
   .about-hero-copy {
     width: 100%;
     height: auto;
-    padding: clamp(34px, 5vw, 46px) clamp(24px, 5vw, 40px) clamp(40px, 6vw, 52px);
+    padding: clamp(34px, 5vw, 46px) clamp(24px, 5vw, 40px)
+      clamp(40px, 6vw, 52px);
     background: #fff;
   }
 
@@ -2810,7 +2826,9 @@ onBeforeUnmount(() => {
     font-size: 13px;
   }
 
-  .about-hero-copy p br { display: none; }
+  .about-hero-copy p br {
+    display: none;
+  }
 
   .mission-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2820,8 +2838,12 @@ onBeforeUnmount(() => {
     padding: clamp(24px, 4vw, 32px) clamp(20px, 4vw, 28px);
   }
 
-  .mission-item:nth-child(2)::after { display: none; }
-  .mission-item:nth-child(-n + 2) { border-bottom: 1px solid var(--about-line); }
+  .mission-item:nth-child(2)::after {
+    display: none;
+  }
+  .mission-item:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--about-line);
+  }
 
   .company-profile-container {
     grid-template-columns: 1fr;
@@ -2833,7 +2855,10 @@ onBeforeUnmount(() => {
     margin: 0 auto;
   }
 
-  .company-profile-image { width: 100%; height: auto; }
+  .company-profile-image {
+    width: 100%;
+    height: auto;
+  }
 
   .company-profile-copy {
     width: min(100%, 760px);
@@ -2849,7 +2874,9 @@ onBeforeUnmount(() => {
     min-height: 190px;
   }
 
-  .recommendation-visual { min-height: 190px; }
+  .recommendation-visual {
+    min-height: 190px;
+  }
 
   .partners-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -2866,7 +2893,9 @@ onBeforeUnmount(() => {
     scrollbar-width: none;
   }
 
-  .region-tabs::-webkit-scrollbar { display: none; }
+  .region-tabs::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {
@@ -2875,7 +2904,8 @@ onBeforeUnmount(() => {
   }
 
   .about-hero-copy {
-    padding: clamp(28px, 7vw, 36px) clamp(18px, 5vw, 24px) clamp(34px, 8vw, 44px);
+    padding: clamp(28px, 7vw, 36px) clamp(18px, 5vw, 24px)
+      clamp(34px, 8vw, 44px);
   }
 
   .about-kicker {
@@ -2894,9 +2924,13 @@ onBeforeUnmount(() => {
     padding: 38px 16px 44px;
   }
 
-  .mission-heading h2 { font-size: clamp(23px, 6.5vw, 27px); }
+  .mission-heading h2 {
+    font-size: clamp(23px, 6.5vw, 27px);
+  }
 
-  .mission-grid { grid-template-columns: 1fr; }
+  .mission-grid {
+    grid-template-columns: 1fr;
+  }
 
   .mission-item,
   .mission-item:nth-child(-n + 2) {
@@ -2904,8 +2938,12 @@ onBeforeUnmount(() => {
     border-bottom: 1px solid var(--about-line);
   }
 
-  .mission-item:last-child { border-bottom: 0; }
-  .mission-item::after { display: none !important; }
+  .mission-item:last-child {
+    border-bottom: 0;
+  }
+  .mission-item::after {
+    display: none !important;
+  }
 
   .mission-icon {
     width: clamp(62px, 18vw, 70px);
@@ -2924,13 +2962,17 @@ onBeforeUnmount(() => {
     padding: 38px 16px 44px;
   }
 
-  .company-profile-container { gap: 24px; }
+  .company-profile-container {
+    gap: 24px;
+  }
 
   .company-profile-heading h2 {
     font-size: clamp(24px, 7vw, 30px);
   }
 
-  .company-profile-heading span { margin-bottom: 18px; }
+  .company-profile-heading span {
+    margin-bottom: 18px;
+  }
 
   .company-profile-copy p {
     font-size: 13px;
@@ -2966,26 +3008,56 @@ onBeforeUnmount(() => {
     min-height: 0;
   }
 
-  .recommendation-visual { min-height: 168px; }
-  .recommendation-visual svg { width: 46px; height: 46px; }
+  .recommendation-visual {
+    min-height: 168px;
+  }
+  .recommendation-visual svg {
+    width: 46px;
+    height: 46px;
+  }
 
-  .recommendation-copy { padding: 16px 14px; }
-  .recommendation-head h3 { font-size: 17px; }
-  .recommendation-description { margin-top: 10px; font-size: 12px; line-height: 1.65; }
-  .recommendation-hospitals { margin-top: 12px; padding-top: 12px; }
-  .hospital-tags { gap: 6px; }
-  .hospital-tag, .hospital-more-badge { font-size: 10px; }
+  .recommendation-copy {
+    padding: 16px 14px;
+  }
+  .recommendation-head h3 {
+    font-size: 17px;
+  }
+  .recommendation-description {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+  .recommendation-hospitals {
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+  .hospital-tags {
+    gap: 6px;
+  }
+  .hospital-tag,
+  .hospital-more-badge {
+    font-size: 10px;
+  }
 
-  .partners-section { padding: 20px 0 48px; }
+  .partners-section {
+    padding: 20px 0 48px;
+  }
   .partners-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 18px 22px;
   }
 
-  .partner-item { min-height: 58px; padding: 6px 2px; }
-  .partner-item img { max-height: 42px; }
+  .partner-item {
+    min-height: 58px;
+    padding: 6px 2px;
+  }
+  .partner-item img {
+    max-height: 42px;
+  }
 
-  .recommendation-modal { padding: 6px; }
+  .recommendation-modal {
+    padding: 6px;
+  }
 
   .recommendation-modal-panel {
     width: 100%;
@@ -2997,8 +3069,12 @@ onBeforeUnmount(() => {
     padding: 18px 16px 12px;
   }
 
-  .modal-title-block h2 { font-size: 20px; }
-  .modal-title-block p { font-size: 11.5px; }
+  .modal-title-block h2 {
+    font-size: 20px;
+  }
+  .modal-title-block p {
+    font-size: 11.5px;
+  }
 
   .region-tabs {
     width: calc(100% - 20px);
@@ -3020,8 +3096,12 @@ onBeforeUnmount(() => {
     padding: 16px 14px 18px;
   }
 
-  .region-overview { margin-bottom: 12px; }
-  .region-overview h3 { font-size: 18px; }
+  .region-overview {
+    margin-bottom: 12px;
+  }
+  .region-overview h3 {
+    font-size: 18px;
+  }
 
   .modal-product-row {
     grid-template-columns: 1fr;
@@ -3040,10 +3120,16 @@ onBeforeUnmount(() => {
     border-radius: 14px;
   }
 
-  .product-summary-copy h4 { font-size: 16px; }
-  .product-summary-copy p { font-size: 11.5px; }
+  .product-summary-copy h4 {
+    font-size: 16px;
+  }
+  .product-summary-copy p {
+    font-size: 11.5px;
+  }
 
-  .hospital-chip-list { gap: 6px; }
+  .hospital-chip-list {
+    gap: 6px;
+  }
   .hospital-chip {
     min-height: 32px;
     padding: 6px 9px;
@@ -3059,8 +3145,6 @@ onBeforeUnmount(() => {
     min-height: 40px;
   }
 }
-
-
 
 /* ===== Mobile About Hero Overlay Redesign ===== */
 /* 功能：手機版 Hero 改為單一完整主視覺，圖片與文字不再上下切開。 */
@@ -3093,14 +3177,14 @@ onBeforeUnmount(() => {
     z-index: 2;
     inset: 0;
     display: block;
-    background:
-      linear-gradient(180deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.04) 32%,
-        rgba(255,255,255,.72) 58%,
-        rgba(255,255,255,.96) 72%,
-        #fff 100%
-      );
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.04) 32%,
+      rgba(255, 255, 255, 0.72) 58%,
+      rgba(255, 255, 255, 0.96) 72%,
+      #fff 100%
+    );
   }
 
   .about-hero-copy {
@@ -3122,7 +3206,7 @@ onBeforeUnmount(() => {
     color: var(--about-purple);
     font-size: 12px;
     font-weight: 800;
-    letter-spacing: .1em;
+    letter-spacing: 0.1em;
   }
 
   .about-hero h1 {
@@ -3132,7 +3216,7 @@ onBeforeUnmount(() => {
     font-size: clamp(29px, 8vw, 36px);
     font-weight: 800;
     line-height: 1.18;
-    letter-spacing: .025em;
+    letter-spacing: 0.025em;
   }
 
   .about-hero-copy p {
@@ -3147,8 +3231,6 @@ onBeforeUnmount(() => {
     display: none;
   }
 }
-
-
 
 /* ===== Hide About Hero Image Below 1180px ===== */
 @media (max-width: 1179px) {
@@ -3171,7 +3253,8 @@ onBeforeUnmount(() => {
     width: min(100%, 900px);
     height: auto;
     margin: 0 auto;
-    padding: clamp(44px, 6vw, 68px) clamp(24px, 6vw, 56px) clamp(46px, 6vw, 64px);
+    padding: clamp(44px, 6vw, 68px) clamp(24px, 6vw, 56px)
+      clamp(46px, 6vw, 64px);
     background: #fff;
   }
 
@@ -3199,7 +3282,6 @@ onBeforeUnmount(() => {
   }
 }
 
-
 /* ============================================================
    About 內容物淡入
    功能：背景與 section 直接顯示，只讓文字、圖片、icon、卡片與品牌 Logo 淡入。
@@ -3213,17 +3295,65 @@ onBeforeUnmount(() => {
 .section-title-row,
 .recommendation-card,
 .recommendation-more,
-.partner-item { animation: about-content-fade-in .68s cubic-bezier(.22,1,.36,1) backwards; }
-.about-hero-media img, .company-profile-visual { animation-name: about-media-fade-in; animation-duration: .8s; }
-.mission-item:nth-child(2), .recommendation-card:nth-child(2), .partner-item:nth-child(2) { animation-delay: .06s; }
-.mission-item:nth-child(3), .recommendation-card:nth-child(3), .partner-item:nth-child(3) { animation-delay: .12s; }
-.mission-item:nth-child(4), .partner-item:nth-child(4) { animation-delay: .18s; }
-.partner-item:nth-child(5) { animation-delay: .24s; }
-.partner-item:nth-child(6) { animation-delay: .30s; }
-@keyframes about-content-fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes about-media-fade-in { from { opacity: 0; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) {
-  .about-hero-copy > *, .about-hero-media img, .mission-heading, .mission-item, .company-profile-visual, .company-profile-copy > *, .section-title-row, .recommendation-card, .recommendation-more, .partner-item { animation: none !important; }
+.partner-item {
+  animation: about-content-fade-in 0.68s cubic-bezier(0.22, 1, 0.36, 1)
+    backwards;
 }
-
+.about-hero-media img,
+.company-profile-visual {
+  animation-name: about-media-fade-in;
+  animation-duration: 0.8s;
+}
+.mission-item:nth-child(2),
+.recommendation-card:nth-child(2),
+.partner-item:nth-child(2) {
+  animation-delay: 0.06s;
+}
+.mission-item:nth-child(3),
+.recommendation-card:nth-child(3),
+.partner-item:nth-child(3) {
+  animation-delay: 0.12s;
+}
+.mission-item:nth-child(4),
+.partner-item:nth-child(4) {
+  animation-delay: 0.18s;
+}
+.partner-item:nth-child(5) {
+  animation-delay: 0.24s;
+}
+.partner-item:nth-child(6) {
+  animation-delay: 0.3s;
+}
+@keyframes about-content-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes about-media-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .about-hero-copy > *,
+  .about-hero-media img,
+  .mission-heading,
+  .mission-item,
+  .company-profile-visual,
+  .company-profile-copy > *,
+  .section-title-row,
+  .recommendation-card,
+  .recommendation-more,
+  .partner-item {
+    animation: none !important;
+  }
+}
 </style>

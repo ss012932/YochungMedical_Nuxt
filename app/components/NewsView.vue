@@ -95,6 +95,13 @@
         </div>
       </div>
     </Transition>
+
+    <!-- 功能：首頁推薦商品按下「聯絡客服」後，直接顯示共用洽詢客服框。 -->
+    <InquiryContactModal
+      :is-visible="inquiryVisible"
+      :product-name="products[activeTab].name"
+      @close="inquiryVisible = false"
+    />
   </Teleport>
 </template>
 
@@ -118,6 +125,8 @@ export default {
       startX: 0,
       startY: 0,
       activeTab: 0,
+      // 功能：控制共用洽詢客服懸浮框顯示狀態。
+      inquiryVisible: false,
       lightboxVisible: false,
       lightboxImage: "",
       products: [
@@ -160,7 +169,7 @@ export default {
       };
     },
   },
-  emits: ["close", "contact", "learn-more"],
+  emits: ["close", "learn-more"],
   beforeUnmount() {
     if (typeof document !== "undefined") document.body.style.overflow = "";
   },
@@ -207,8 +216,8 @@ export default {
       this.$emit("close");
     },
     contactSupport() {
-      this.$emit("contact");
-      this.closeModal();
+      // 功能：保留推薦商品 Modal，並在其上方開啟洽詢客服框；關閉客服框後可回到原商品。
+      this.inquiryVisible = true;
     },
     learnMore() {
       this.$emit("learn-more", this.products[this.activeTab]);

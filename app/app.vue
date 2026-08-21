@@ -15,6 +15,7 @@
 const { locale } = useI18n()
 const site = useSiteConfig()
 
+
 // 全站共用 SEO。各頁仍可用 useSeoMeta 覆蓋 title / description。
 useHead(() => ({
   titleTemplate: (titleChunk) => {

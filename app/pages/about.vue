@@ -260,7 +260,7 @@
               <div class="recommendation-head">
                 <div>
                   <span class="recommendation-label">{{ $ui("推薦器材") }}</span>
-                  <h3>{{ $ui(item.product) }}</h3>
+                  <h3>{{ getProductDisplayName(item.product) }}</h3>
                 </div>
                 <span class="recommendation-quote" aria-hidden="true">“</span>
               </div>
@@ -277,7 +277,7 @@
                     :key="hospital"
                     class="hospital-tag"
                   >
-                    {{ $ui(hospital) }}
+                    {{ getInstitutionDisplayName(hospital) }}
                   </span>
                   <span
                     v-if="item.hospitals.length > 2"
@@ -420,7 +420,7 @@
                     @click="selectDesktopProduct(group.id)"
                   >
                     <span class="product-index-item-copy">
-                      <strong>{{ $ui(group.product) }}</strong>
+                      <strong>{{ getProductDisplayName(group.product) }}</strong>
                       <small>{{ group.hospitals.length }} {{ $ui('個使用單位') }}</small>
                     </span>
                     <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
@@ -490,7 +490,7 @@
                 <header class="product-detail-header">
                   <div class="product-detail-copy">
                     <div class="product-detail-title-row">
-                      <h4>{{ $ui(selectedDesktopRecommendationGroup.product) }}</h4>
+                      <h4>{{ getProductDisplayName(selectedDesktopRecommendationGroup.product) }}</h4>
                     </div>
                     <p>{{ $ui(selectedDesktopRecommendationGroup.description) }}</p>
                   </div>
@@ -499,7 +499,7 @@
                   <button
                     type="button"
                     class="desktop-product-image-button"
-                    :aria-label="$ui(selectedDesktopRecommendationGroup.product + ' 查看圖片')"
+                    :aria-label="getProductDisplayName(selectedDesktopRecommendationGroup.product) + ' 查看圖片'"
                     @click.stop="openMobileProductPreview(selectedDesktopRecommendationGroup.product)"
                   >
                     {{ $ui('查看圖片') }}
@@ -519,7 +519,7 @@
                     class="hospital-directory-item"
                   >
                     <span class="hospital-dot" aria-hidden="true"></span>
-                    <span>{{ $ui(hospital) }}</span>
+                    <span>{{ getInstitutionDisplayName(hospital) }}</span>
                   </div>
                 </div>
               </section>
@@ -565,7 +565,7 @@
                     @click="selectMobileProduct(group.id)"
                   >
                     <span>
-                      <strong>{{ $ui(group.product) }}</strong>
+                      <strong>{{ getProductDisplayName(group.product) }}</strong>
                       <small>{{ group.hospitals.length }} {{ $ui('個使用單位') }}</small>
                     </span>
                     <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
@@ -594,14 +594,14 @@
 
                 <div class="mobile-product-detail-heading">
                   <div class="mobile-product-detail-copy">
-                    <h4>{{ $ui(selectedMobileRecommendationGroup.product) }}</h4>
+                    <h4>{{ getProductDisplayName(selectedMobileRecommendationGroup.product) }}</h4>
                     <p>{{ $ui(selectedMobileRecommendationGroup.description) }}</p>
                   </div>
 
                   <button
                     type="button"
                     class="mobile-product-image-button"
-                    :aria-label="$ui(selectedMobileRecommendationGroup.product + ' 查看圖片')"
+                    :aria-label="getProductDisplayName(selectedMobileRecommendationGroup.product) + ' 查看圖片'"
                     @click.stop="openMobileProductPreview(selectedMobileRecommendationGroup.product)"
                   >
                     {{ $ui('查看圖片') }}
@@ -619,7 +619,7 @@
                     class="hospital-chip"
                   >
                     <span class="hospital-dot" aria-hidden="true"></span>
-                    {{ $ui(hospital) }}
+                    {{ getInstitutionDisplayName(hospital) }}
                   </span>
                 </div>
 
@@ -682,13 +682,68 @@ import savpet2 from "@/assets/image/savpet-2.webp";
 import savpet3 from "@/assets/image/savpet-3.webp";
 import savpet4 from "@/assets/image/savpet-4.webp";
 // ============================================================
-// SEO
-// 功能：使用祐強實際品牌內容，不採用設計稿範例公司資訊。
+// 多語醫院／機構名稱顯示
+// 功能：繁中／簡中保留中文正式名稱；其他語言優先使用官方英文名稱。
 // ============================================================
+const { locale } = useI18n();
+const ui = useUiText();
+
+// ============================================================
+// SEO
+// 功能：依目前語言輸出 About 頁 title / description；不新增頁面也能讓非中文語系 head 不再是中文。
+// ============================================================
+const aboutSeoCopy = computed(() => {
+  switch (locale.value) {
+    case "zh-CN":
+      return {
+        title: "关于祐强｜祐强医疗仪器有限公司",
+        description:
+          "了解祐强医疗仪器有限公司的公司理念、宠物医疗设备、伤口照护与专业服务方向。",
+      };
+    case "en":
+      return {
+        title: "About Yochung Medical｜Veterinary Equipment and Wound Care",
+        description:
+          "Learn about Yochung Medical, veterinary medical equipment, wound care products, and equipment usage references from veterinary hospitals and medical institutions.",
+      };
+    case "ja":
+      return {
+        title: "祐強医療について｜動物医療機器・創傷ケア製品",
+        description:
+          "祐強医療の理念、動物医療機器、創傷ケア製品、動物病院や医療機関での使用実績をご紹介します。",
+      };
+    case "ko":
+      return {
+        title: "Yochung Medical 소개｜동물 의료기기 및 상처 관리 제품",
+        description:
+          "Yochung Medical의 기업理念, 동물 의료기기, 상처 관리 제품 및 동물병원 사용 실적을 소개합니다.",
+      };
+    case "vi":
+      return {
+        title: "Giới thiệu Yochung Medical｜Thiết bị thú y và chăm sóc vết thương",
+        description:
+          "Tìm hiểu về Yochung Medical, thiết bị y tế thú y, sản phẩm chăm sóc vết thương và hồ sơ sử dụng tại bệnh viện thú y.",
+      };
+    case "th":
+      return {
+        title: "เกี่ยวกับ Yochung Medical｜อุปกรณ์สัตวแพทย์และผลิตภัณฑ์ดูแลแผล",
+        description:
+          "เรียนรู้เกี่ยวกับ Yochung Medical อุปกรณ์ทางการแพทย์สำหรับสัตว์ ผลิตภัณฑ์ดูแลแผล และข้อมูลการใช้งานจากโรงพยาบาลสัตว์",
+      };
+    default:
+      return {
+        title: "關於祐強｜祐強醫療儀器有限公司",
+        description:
+          "了解祐強醫療儀器有限公司的公司理念、寵物醫療設備、傷口照護與專業服務方向。",
+      };
+  }
+});
+
 useSeoMeta({
-  title: "關於祐強｜祐強醫療儀器有限公司",
-  description:
-    "了解祐強醫療儀器有限公司的公司理念、寵物醫療設備、傷口照護與專業服務方向。",
+  title: () => aboutSeoCopy.value.title,
+  description: () => aboutSeoCopy.value.description,
+  ogTitle: () => aboutSeoCopy.value.title,
+  ogDescription: () => aboutSeoCopy.value.description,
 });
 
 // ============================================================
@@ -1754,6 +1809,448 @@ const additionalProductDescriptions: Record<string, string> = {
   "PEDGRACE 傷口呼呼貼": "PEDGRACE 傷口照護產品，依提供的實際採購／使用資料整理。"
 };
 
+// ============================================================
+// 產品多語名稱資料
+// 功能：非中文語系優先顯示官方英文；沒有官方英文時才使用描述英文或保留中文。
+// ============================================================
+type ProductEnglishNameStatus =
+  | "verified"
+  | "pending"
+  | "descriptive_only"
+  | "not_found";
+
+interface ProductEnglishNameMeta {
+  officialEnglishName?: string;
+  suggestedEnglishName?: string;
+  status: ProductEnglishNameStatus;
+}
+
+const productEnglishNameMeta: Record<string, ProductEnglishNameMeta> = {
+  "舒派特凝膠": {
+    officialEnglishName: "SavPet Debridement Gel (Sterile)",
+    status: "verified",
+  },
+  "舒派特敷料系列": {
+    officialEnglishName: "SavPet Wound Care",
+    status: "verified",
+  },
+  "PETTRUST 血壓計": {
+    officialEnglishName: "pettrust Non-invasive Veterinary Blood Pressure Monitor",
+    suggestedEnglishName: "pettrust NIBP",
+    status: "verified",
+  },
+  "抗菌無痛滲液敷料": {
+    officialEnglishName: "SavPet Antiseptic Wound Dressing",
+    status: "verified",
+  },
+  "好吸海藻敷料": {
+    suggestedEnglishName: "SavPet Alginate Dressing",
+    status: "pending",
+  },
+  "抗菌含銀泡棉敷料": {
+    suggestedEnglishName: "SavPet Antiseptic Ag Foam Dressing",
+    status: "pending",
+  },
+  "溫風毯機": {
+    suggestedEnglishName: "Forced-Air Warming System",
+    status: "descriptive_only",
+  },
+  "BOWA ARC350 電刀": {
+    officialEnglishName: "BOWA ARC 350 Electrosurgical Unit",
+    status: "verified",
+  },
+  "球型活性碳": {
+    suggestedEnglishName: "Spherical Activated Carbon",
+    status: "pending",
+  },
+  "疝氣腹膜網": {
+    suggestedEnglishName: "Hernia Mesh",
+    status: "descriptive_only",
+  },
+  "A.R.C. FOX810 雷射主機": {
+    officialEnglishName: "A.R.C. FOX 810 Diode Laser",
+    suggestedEnglishName: "FOX IV 810 Diode Laser",
+    status: "verified",
+  },
+  "CASP 電漿滅菌／消毒鍋": {
+    officialEnglishName: "CASP Hydrogen Peroxide Low Temperature Plasma Sterilizer",
+    status: "verified",
+  },
+  "DRF40 X光機": {
+    officialEnglishName: "SuperRay DRF40 Veterinary Dynamic DRF System",
+    status: "verified",
+  },
+  "IMEC8 生理監視器": {
+    officialEnglishName: "Mindray iMEC8 Patient Monitor",
+    status: "verified",
+  },
+  "LOTUS 超音波刀": {
+    officialEnglishName: "LOTUS Torsional Ultrasonic Scalpel",
+    status: "verified",
+  },
+  "LOTUS 超音波機": {
+    officialEnglishName: "LOTUS Ultrasonic Surgical System",
+    status: "verified",
+  },
+  "MTS 體外震波治療儀": {
+    officialEnglishName: "MTS Extracorporeal Shock Wave Therapy System",
+    suggestedEnglishName: "MTS Shockwave Therapy System",
+    status: "verified",
+  },
+  "PGS 電刀": {
+    suggestedEnglishName: "PGS Electrosurgical Unit",
+    status: "not_found",
+  },
+  "PHILIPS CM100 生理監視器": {
+    officialEnglishName: "Philips Efficia CM100 Patient Monitor",
+    status: "verified",
+  },
+  "超音波機（未標品牌／型號）": {
+    suggestedEnglishName: "Ultrasound System",
+    status: "descriptive_only",
+  },
+  "輕氧艙": {
+    suggestedEnglishName: "Oxygen Therapy Chamber",
+    status: "descriptive_only",
+  },
+  "動物專用異物鉗 AK47": {
+    suggestedEnglishName: "Veterinary Foreign Body Forceps AK47",
+    status: "not_found",
+  },
+  "喉頭鏡": {
+    suggestedEnglishName: "Laryngoscope",
+    status: "descriptive_only",
+  },
+  "WOLF（原資料僅記品牌）": {
+    suggestedEnglishName: "Richard Wolf Endoscope",
+    status: "pending",
+  },
+  "沈大腹腔鏡": {
+    suggestedEnglishName: "Shenda Laparoscope",
+    status: "pending",
+  },
+  "生理監視器（未標型號）": {
+    suggestedEnglishName: "Patient Monitor",
+    status: "descriptive_only",
+  },
+  "電動升降診療台": {
+    suggestedEnglishName: "Electric Lift Examination Table",
+    status: "descriptive_only",
+  },
+  "PGS 氬氣刀": {
+    suggestedEnglishName: "Argon Plasma Coagulation System",
+    status: "not_found",
+  },
+  "食道內視鏡 AK47": {
+    suggestedEnglishName: "Veterinary Esophagoscope AK47",
+    status: "not_found",
+  },
+  "BOWA 氬氣刀": {
+    officialEnglishName: "BOWA ARC PLUS for Argon-Assisted Electrosurgery",
+    status: "verified",
+  },
+  "HD 高清五官鏡": {
+    suggestedEnglishName: "HD Veterinary Otoscope and Ophthalmoscope Set",
+    status: "descriptive_only",
+  },
+  "移動式 X光機": {
+    suggestedEnglishName: "Mobile X-ray System",
+    status: "descriptive_only",
+  },
+  "動物麻醉機 ETCO2": {
+    suggestedEnglishName: "Veterinary Anesthesia Machine with ETCO2 Monitoring",
+    status: "descriptive_only",
+  },
+  "壁掛式手術燈": {
+    suggestedEnglishName: "Wall-Mounted Surgical Light",
+    status: "descriptive_only",
+  },
+  "異物鉗（未標型號）": {
+    suggestedEnglishName: "Foreign Body Forceps",
+    status: "descriptive_only",
+  },
+  "華佗20 麻醉機": {
+    suggestedEnglishName: "Huatuo 20 Veterinary Anesthesia Machine",
+    status: "not_found",
+  },
+  "造影劑": {
+    suggestedEnglishName: "Contrast Agent",
+    status: "descriptive_only",
+  },
+  "沈大軟式內視鏡": {
+    suggestedEnglishName: "Shenda Flexible Endoscope",
+    status: "pending",
+  },
+  "ICU": {
+    suggestedEnglishName: "Veterinary Intensive Care Unit",
+    status: "descriptive_only",
+  },
+  "HY300 滅菌鍋": {
+    suggestedEnglishName: "HY-300S Autoclave / Sterilizer",
+    status: "pending",
+  },
+  "輸液幫浦": {
+    suggestedEnglishName: "Infusion Pump",
+    status: "descriptive_only",
+  },
+  "CNS 麻醉機呼吸器": {
+    suggestedEnglishName: "CNS Anesthesia Ventilator",
+    status: "not_found",
+  },
+  "凝膠（原資料未標品牌）": {
+    suggestedEnglishName: "Gel",
+    status: "descriptive_only",
+  },
+  "五官鏡（未標型號）": {
+    suggestedEnglishName: "Veterinary Otoscope and Ophthalmoscope Set",
+    status: "descriptive_only",
+  },
+  "製氧機": {
+    suggestedEnglishName: "Oxygen Concentrator",
+    status: "descriptive_only",
+  },
+  "腸滲淨": {
+    suggestedEnglishName: "Intestinal Care Product",
+    status: "not_found",
+  },
+  "鋇脫普粉": {
+    suggestedEnglishName: "Barium Sulfate Powder",
+    status: "not_found",
+  },
+  "BOWA ARC400 電刀": {
+    officialEnglishName: "BOWA ARC 400 Electrosurgical Unit",
+    suggestedEnglishName: "BOWA ARC 400 HF Generator",
+    status: "verified",
+  },
+  "V型電動升降手術台": {
+    suggestedEnglishName: "V-Type Electric Lift Surgery Table",
+    status: "descriptive_only",
+  },
+  "吸引器": {
+    suggestedEnglishName: "Suction Unit",
+    status: "descriptive_only",
+  },
+  "高速電動鑽具": {
+    suggestedEnglishName: "High-Speed Electric Drill System",
+    status: "descriptive_only",
+  },
+  "吻合器": {
+    suggestedEnglishName: "Surgical Stapler",
+    status: "descriptive_only",
+  },
+  "油壓手術台": {
+    suggestedEnglishName: "Hydraulic Surgery Table",
+    status: "descriptive_only",
+  },
+  "血管夾": {
+    suggestedEnglishName: "Vascular Clamp",
+    status: "descriptive_only",
+  },
+  "TOP 輸液幫浦": {
+    officialEnglishName: "TOP Infusion Pump",
+    status: "verified",
+  },
+  "磅秤": {
+    suggestedEnglishName: "Veterinary Scale",
+    status: "descriptive_only",
+  },
+  "顯微鏡": {
+    suggestedEnglishName: "Microscope",
+    status: "descriptive_only",
+  },
+  "手術台": {
+    suggestedEnglishName: "Operating Table",
+    status: "descriptive_only",
+  },
+  "滅菌鍋（未標型號）": {
+    suggestedEnglishName: "Autoclave / Sterilizer",
+    status: "descriptive_only",
+  },
+  "洗牙機": {
+    suggestedEnglishName: "Ultrasonic Scaler",
+    status: "descriptive_only",
+  },
+  "鋇粉": {
+    suggestedEnglishName: "Barium Sulfate Powder",
+    status: "descriptive_only",
+  },
+  "HY230S 滅菌鍋": {
+    officialEnglishName: "HY-230S Autoclave / Sterilizer",
+    status: "verified",
+  },
+  "直立式蒸汽滅菌鍋": {
+    suggestedEnglishName: "Vertical Steam Sterilizer",
+    status: "descriptive_only",
+  },
+  "手術燈（未標型號）": {
+    suggestedEnglishName: "Surgical Light",
+    status: "descriptive_only",
+  },
+  "200型電刀": {
+    suggestedEnglishName: "Model 200 Electrosurgical Unit",
+    status: "not_found",
+  },
+  "德國 WOLF 鏡頭": {
+    suggestedEnglishName: "Richard Wolf Endoscope Camera Head",
+    status: "pending",
+  },
+  "數位封口機": {
+    suggestedEnglishName: "Digital Sealing Machine",
+    status: "descriptive_only",
+  },
+  "直線吻合器": {
+    suggestedEnglishName: "Linear Stapler",
+    status: "descriptive_only",
+  },
+  "X光底片": {
+    suggestedEnglishName: "X-ray Film",
+    status: "descriptive_only",
+  },
+  "電動交叉磅秤手術台": {
+    suggestedEnglishName: "Electric Scissor-Lift Weighing Surgery Table",
+    status: "not_found",
+  },
+  "PEDGRACE 傷口呼呼貼": {
+    suggestedEnglishName: "PEDGRACE Wound Dressing",
+    status: "not_found",
+  },
+};
+
+function isChineseProductLocale() {
+  return locale.value === "zh-TW" || locale.value === "zh-CN";
+}
+
+/**
+ * 功能：依目前語言取得產品顯示名稱。
+ * 中文語系保留中文；其他語系一律顯示英文。
+ * 沒有官方英文時使用描述英文；若資料漏填，顯示英文待補提示。
+ */
+function getFallbackEnglishProductName() {
+  return "Medical Product (English Name Pending)";
+}
+
+function getProductDisplayName(productName: string) {
+  if (isChineseProductLocale()) return ui(productName);
+
+  const meta = productEnglishNameMeta[productName];
+  if (meta?.officialEnglishName) return meta.officialEnglishName;
+  if (meta?.suggestedEnglishName) return meta.suggestedEnglishName;
+
+  return getFallbackEnglishProductName();
+}
+
+// 功能：搜尋時同時比對中文產品名、官方英文名、描述英文與既有 i18n 文案。
+function getProductSearchText(productName: string) {
+  const meta = productEnglishNameMeta[productName];
+  return [
+    productName,
+    ui(productName),
+    meta?.officialEnglishName ?? "",
+    meta?.suggestedEnglishName ?? "",
+    meta?.status ?? "",
+  ].join(" ");
+}
+
+// ============================================================
+// 醫院／機構多語名稱資料
+// 功能：只有確認官方英文名稱時才填 officialEnglishName；沒有就保留中文正式名稱。
+// ============================================================
+type InstitutionType =
+  | "veterinary-hospital"
+  | "veterinary-teaching-hospital"
+  | "zoo"
+  | "clinic"
+  | "hospital"
+  | "animal-protection-office"
+  | "education-center"
+  | "institution";
+
+interface InstitutionNameMeta {
+  officialEnglishName?: string;
+  city?: string;
+  type?: InstitutionType;
+}
+
+const institutionNameMeta: Record<string, InstitutionNameMeta> = {
+  "國立台灣大學附設動物醫院": {
+    officialEnglishName: "The National Taiwan University Veterinary Hospital",
+    city: "Taipei",
+    type: "veterinary-teaching-hospital",
+  },
+  "國立中興大學獸醫教學醫院": {
+    officialEnglishName: "Veterinary Medical Teaching Hospital, NCHU",
+    city: "Taichung",
+    type: "veterinary-teaching-hospital",
+  },
+};
+
+function isChineseRecommendationLocale() {
+  return locale.value === "zh-TW" || locale.value === "zh-CN";
+}
+
+function inferInstitutionType(name: string): InstitutionType {
+  if (name.includes("獸醫教學醫院")) return "veterinary-teaching-hospital";
+  if (name.includes("動物園") || name.includes("綠世界") || name.includes("頑皮世界")) return "zoo";
+  if (name.includes("動保處")) return "animal-protection-office";
+  if (name.includes("教育")) return "education-center";
+  if (name.includes("動物醫院") || name.includes("獸醫院")) return "veterinary-hospital";
+  if (name.includes("診所")) return "clinic";
+  if (name.includes("醫院")) return "hospital";
+  return "institution";
+}
+
+function getInstitutionTypeLabel(type: InstitutionType) {
+  switch (type) {
+    case "veterinary-teaching-hospital":
+      return "Veterinary Teaching Hospital";
+    case "veterinary-hospital":
+      return "Veterinary Hospital";
+    case "zoo":
+      return "Zoo";
+    case "clinic":
+      return "Clinic";
+    case "hospital":
+      return "Hospital";
+    case "animal-protection-office":
+      return "Animal Protection Office";
+    case "education-center":
+      return "Education and Training Center";
+    default:
+      return "Institution";
+  }
+}
+
+/**
+ * 功能：依目前語言取得醫院／機構顯示名稱。
+ * 繁中、簡中顯示中文正式名稱；其他語言有官方英文就用英文，沒有就保留中文並補充類型。
+ */
+function getInstitutionDisplayName(name: string) {
+  if (isChineseRecommendationLocale()) return name;
+
+  const meta = institutionNameMeta[name];
+  if (meta?.officialEnglishName) return meta.officialEnglishName;
+
+  const type = meta?.type ?? inferInstitutionType(name);
+  const typeLabel = getInstitutionTypeLabel(type);
+  const location = meta?.city ? ', ' + meta.city + ', Taiwan' : ', Taiwan';
+
+  return name + ' (' + typeLabel + location + ')';
+}
+
+// 功能：搜尋時同時比對中文正式名稱、官方英文名稱與外語補充顯示名稱。
+function getInstitutionSearchText(name: string) {
+  const meta = institutionNameMeta[name];
+  return [
+    name,
+    meta?.officialEnglishName ?? "",
+    getInstitutionDisplayName(name),
+    getInstitutionTypeLabel(meta?.type ?? inferInstitutionType(name)),
+    meta?.city ?? "",
+    "Taiwan",
+  ].join(" ");
+}
+
+
 // 功能：將新增區域資料合併到既有北部商品清單，同商品／同醫院自動去重。
 const recommendationProducts = (() => {
   const products = northRecommendationProducts.map((group) => ({
@@ -2185,7 +2682,9 @@ const filteredRecommendationGroups = computed(() => {
   if (!keyword) return groups;
 
   return groups.flatMap((group) => {
-    const productMatched = group.product.toLocaleLowerCase().includes(keyword);
+    const productMatched = getProductSearchText(group.product)
+      .toLocaleLowerCase()
+      .includes(keyword);
     const descriptionMatched = group.description
       .toLocaleLowerCase()
       .includes(keyword);
@@ -2195,7 +2694,7 @@ const filteredRecommendationGroups = computed(() => {
     if (productMatched || descriptionMatched) return [group];
 
     const matchedHospitals = group.hospitals.filter((hospital) =>
-      hospital.toLocaleLowerCase().includes(keyword),
+      getInstitutionSearchText(hospital).toLocaleLowerCase().includes(keyword),
     );
 
     return matchedHospitals.length > 0
